@@ -22,8 +22,6 @@ if res!=0:
 
 #first braille
 letters= ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "w", "x", "y", "z"]
-word = random_word(letters)
-clientLib.nvdaController_brailleMessage(word)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		s.bind((HOST, PORT))
 		s.listen()
