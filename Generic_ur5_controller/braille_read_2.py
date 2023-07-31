@@ -15,9 +15,9 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
 
     tstart = time.time()
-    print("------------Configuring braille_bot------------\r\n")
-    braille_bot = kgr.kg_robot(port=30000,db_host="169.254.252.50")
-    print("----------------Hi braille_bot!-----------------\r\n\r\n")
+    print("------------Configuring brailley------------\r\n")
+    brailley = kgr.kg_robot(port=30000,db_host="169.254.252.50")
+    print("----------------Hi brailley!-----------------\r\n\r\n")
 
     #scheduler used to regularly pass desired positions to servoj 
     scheduler = sched.scheduler(time.time, time.sleep)
@@ -91,7 +91,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         npose = np.add(npose, [0, 0, 0, anglex, angley, 0])
         npose = np.add(npose, [xamp*math.sin(xphase), 0, 0, 0, 0, 0])
         npose = np.add(npose, [0, yamp*math.sin(yphase), 0, 0, 0, 0])
-        braille_bot.movel(npose)
+        brailley.movel(npose)
         
     # main function: moves to desired position at any moment in time
     def parameter_move(t0, centrepose, xamp, xfreq, xphase, yamp, yfreq, yphase, zamp, zfreq, depth, anglex, angley, decayrate):
@@ -113,7 +113,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         #zvibrations
         npose = np.add(npose, [0, 0, zamp*math.sin(zfreq*t), 0, 0, 0])
         #pass to UR5
-        braille_bot.servoj(npose, vel=50, control_time=0.05)
+        brailley.servoj(npose, vel=50, control_time=0.05)
 
     if __name__=='__main__':
 
@@ -135,7 +135,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         #time.sleep(2)
 
         #1hz
-        braille_bot.movel([0.259405, -0.26263, 0.019, 2.09924, 2.33716, -0.000108163], 0.5, 0.2) #move above tub
+        brailley.movel([0.259405, -0.26263, 0.019, 2.09924, 2.33716, -0.000108163], 0.5, 0.2) #move above tub
         centrepose=[0.259405, -0.26263, 0.019, 2.09924, 2.33716, -0.000108163]
 
         #5hz

@@ -19,9 +19,9 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
 
     tstart = time.time()
-    print("------------Configuring braille_bot------------\r\n")
-    braille_bot = kgr.kg_robot(port=30000,db_host="169.254.252.50")
-    print("----------------Hi braille_bot!-----------------\r\n\r\n")
+    print("------------Configuring brailley------------\r\n")
+    brailley = kgr.kg_robot(port=30000,db_host="169.254.252.50")
+    print("----------------Hi brailley!-----------------\r\n\r\n")
 
     ref= cv2.imread("reference_frame.jpg")
     r_ref,g_ref,b_ref = cv2.split(ref)
@@ -109,7 +109,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
             f.close()
 
           
-        braille_bot.movel([0.260394, -0.264857, 0.0135985, 2.09924, 2.33714, -0.000203997], 0.5, 0.2) 
+        brailley.movel([0.260394, -0.264857, 0.0135985, 2.09924, 2.33714, -0.000203997], 0.5, 0.2) 
         time.sleep(1)    
 
         t.start()
@@ -119,7 +119,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         #time.sleep(2)
 
         time.sleep(0.5)
-        braille_bot.movel([0.143181, -0.265351, 0.0135279, 2.16869, 2.27278, -0.00021757], 5, 0.2)
+        brailley.movel([0.143181, -0.265351, 0.0135279, 2.16869, 2.27278, -0.00021757], 5, 0.2)
         
         data = pd.read_csv("row_data.csv")
         fig = data.plot().get_figure()
