@@ -2,8 +2,8 @@ import ctypes
 import socket
 import numpy as np
 
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+HOST = ""  # Standard loopback interface address (localhost)
+PORT = 8080  # Port to listen on (non-privileged ports are > 1023)
 
 def random_word(letters): # generate a random word of length 3
 	word = ""
@@ -20,11 +20,10 @@ if res!=0:
 	errorMessage=str(ctypes.WinError(res))
 	ctypes.windll.user32.MessageBoxW(0,u"Error: %s"%errorMessage,u"Error communicating with NVDA",0)
 
-#first braille
 letters= ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "w", "x", "y", "z"]
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 		s.bind((HOST, PORT))
-		s.listen()
+		s.listen(1)
 		conn, addr = s.accept()
 		with conn:
 			print(f"Connected by {addr}")
