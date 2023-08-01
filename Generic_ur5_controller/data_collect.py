@@ -4,44 +4,86 @@ import kg_robot as kgr
 import time
 import random
 import os
+from threading import Thread
 
-data_count = 1 #initialise data_count
-
-with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit,
+count = 1 #initialise data_count
+prev_y = 0
+prev_z = 0
+with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
-    
+    frame = digit.get_frame()
     print("------------Configuring brailley------------\r\n")
     brailley = kgr.kg_robot(port=30000,db_host="169.254.252.50")
     print("----------------Hi brailley!----------------\r\n\r\n")
 
+    def read_camera(): #function to read camera
+         global frame
+         while True:
+            frame = digit.get_frame() #get frame from camera
+
     def capture_frame(dir_path): #function to capture frame and save it
         os.makedirs(dir_path, exist_ok=True) 
-        frame = digit.get_frame() 
-        base_path = os.path.join(dir_path,"im{}.jpg".format(data_count)) #create path to save frame
+        base_path = os.path.join(dir_path,"im{}.jpg".format(count)) #create path to save frame
         cv2.imwrite(base_path, frame) 
         
     def move_robot(): #fixed movements for each data collection step
-        capture_frame("raw_data") #capture frame
-        data_count += 1 #increment counts
-        brailley.translatel_rel([-0.0058, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
-        brailley.translatel_rel([random.uniform(-0.002, 0.002),random.uniform(-0.002, 0.002),random.uniform(-0.002, 0.002),0,0,0], acc=0.05, vel=0.1, wait=True) 
+        global count #use global count variable (need to tell function this or it doesnt work) 
+        global prev_y, prev_z
+        if count%20 ==1: 
+            capture_frame("raw_data") #capture frame
+        else:
+            rand_y = random.uniform(-0.003, 0.003) #generate random y translation
+            rand_z = random.uniform(-0.0004, 0) #generate random z translation
+            brailley.translatel_rel([0,0,-prev_z,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random z
+            time.sleep(0.5)
+            brailley.translatel_rel([0, 0, +0.01, 0, 0, 0], 0.5, 0.2) #move up to avoid dragging on surface
+            time.sleep(0.5)
+            brailley.translatel_rel([0,-prev_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random y
+            time.sleep(0.5)
+            brailley.translatel_rel([-0.0058, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
+            time.sleep(0.5)
+
+            brailley.translatel_rel([0,rand_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #move to random y position around cell
+            time.sleep(0.5) 
+            brailley.translatel_rel([0, 0, -0.01, 0, 0, 0], 0.5, 0.2)  #move down to cell
+            time.sleep(0.5)
+            brailley.translatel_rel([0,0,rand_z,0,0,0], acc=0.5, vel=0.2, wait=True) #move to random z position 
+            time.sleep(0.5)
+
+            capture_frame("raw_data") #capture frame
+            prev_y = rand_y #store current y to use in next loop
+            prev_z = rand_z #store current z to use in next loop
+        count += 1 #increment counts
+    def scroll_button():
+        global count
+        brailley.movel([0.155901, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
+        time.sleep(0.5)
+        brailley.translatel_rel([0, 0, -0.004, 0, 0, 0], 0.5, 0.2) #press scroll button
+        time.sleep(0.5)
+        brailley.translatel_rel([0, 0, 0.004, 0, 0, 0], 0.5, 0.2) #move back to scroll position
+        time.sleep(0.5)
+        brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
+        time.sleep(0.5)
+        brailley.movel([0.290128, -0.271902, 0.0182491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        count+=1 #increment count
 
     if __name__=='__main__':
-        brailley.movel([0.260394, -0.264857, 0.0135985, 2.09924, 2.33714, -0.000203997], 0.5, 0.2) #move to first position
-        time.sleep(2) #wait for camera colours to adjust
+        t= Thread(target=read_camera) #start thread to read camera
+        t.daemon = True #set thread to daemon so it closes when main thread closes
+        t.start()
+
+        brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
+        time.sleep(0.5)
+        brailley.movel([0.290128, -0.271902, 0.0182491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        time.sleep(0.5)
 
         print("------------Starting data collection------------\r\n")
         dataset_size = 500 #set total number of data points to collect
 
-        while data_count < dataset_size: 
-            if data_count%20 == 0: #every 20 data points, scroll
-                brailley.movel([0.260394, -0.264857, 0.0135985, 2.09924, 2.33714, -0.000203997], 0.5, 0.2) #move to scroll position
-                time.sleep(0.5)
-                brailley.translatel_rel([0, 0, -0.004, 0, 0, 0], 0.5, 0.2) #press scroll button
-                time.sleep(0.5)
-                brailley.translatel_rel([0, 0, -0.004, 0, 0, 0], 0.5, 0.2) #move back to scroll position
-                time.sleep(0.5)
-                brailley.movel([0.260394, -0.264857, 0.0135985, 2.09924, 2.33714, -0.000203997], 0.5, 0.2) #move to first position
+        while count < dataset_size: 
+            print("Data point {} of {} collected".format(count, dataset_size)) #print progress
+            if count%20 == 0: #every 20 data points, scroll
+                scroll_button() #scroll
             else:
                 move_robot() #move robot to next position and capture frame
         print("------------Data collection complete------------\r\n")

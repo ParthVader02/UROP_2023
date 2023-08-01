@@ -67,19 +67,19 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
 
     if __name__=='__main__':
         
-        print("------------Configuring braille_bot------------\r\n")
-        braille_bot = kgr.kg_robot(port=30000,db_host="169.254.252.50")
-        print("----------------Hi braille_bot!-----------------\r\n\r\n")
+        print("------------Configuring brailley------------\r\n")
+        brailley = kgr.kg_robot(port=30000,db_host="169.254.252.50")
+        print("----------------Hi brailley!-----------------\r\n\r\n")
 
         symbols = []
-        print(braille_bot.getl()) 
-        #braille_bot.movel([0.259405, -0.26263, 0.0197141, 2.09924, 2.33716, -0.000108163], acc=0.1, vel=0.1, wait=True)
+        print(brailley.getl()) 
+        #brailley.movel([0.260394, -0.264857, 0.0135985, 2.09924, 2.33714, -0.000203997], 0.5, 0.2) 
         #time.sleep(2)
 
         while True: #len(symbols)<20:
-            #braille_bot.translatel_rel([0,0,-0.002,0,0,0], acc=0.05, vel=0.1, wait=True)
-            #braille_bot.servoj([0.259341, -0.262522, 0.0816393+0.01, -2.0993, -2.33719, 6.73604e-05], vel=1)
-            #braille_bot.servoj([0.259341, -0.262522, 0.0816393-0.01, -2.0993, -2.33719, 6.73604e-05], vel=1)
+            #brailley.translatel_rel([0,0,-0.002,0,0,0], acc=0.05, vel=0.1, wait=True)
+            #brailley.servoj([0.259341, -0.262522, 0.0816393+0.01, -2.0993, -2.33719, 6.73604e-05], vel=1)
+            #brailley.servoj([0.259341, -0.262522, 0.0816393-0.01, -2.0993, -2.33719, 6.73604e-05], vel=1)
            
             letters = [] #create empty list to store letters
             while digit.frame_count <=59:
@@ -97,17 +97,17 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
                 if len(letters) > 0:
                     symbols.append(mode(letters))
                 digit.frame_count = 0
-            #braille_bot.translatel_rel([0,0,+0.002,0,0,0], acc=0.05, vel=0.1, wait=True)
-            #braille_bot.translatel_rel([0,+0.0063,0,0,0,0], acc=0.05, vel=0.1, wait=True)
+            #brailley.translatel_rel([0,0,+0.002,0,0,0], acc=0.05, vel=0.1, wait=True)
+            #brailley.translatel_rel([0,+0.0063,0,0,0,0], acc=0.05, vel=0.1, wait=True)
                 
             print(symbols)
             
 
         if len(symbols) == 20:
-            #braille_bot.movel([0.3649,-0.0245,-0.4039,0.58,-3.09,0], acc=0.1, vel=0.1, wait=True)
+            #brailley.movel([0.3649,-0.0245,-0.4039,0.58,-3.09,0], acc=0.1, vel=0.1, wait=True)
             time.sleep(2)
             braille_bot.translatel_rel([0,0,+0.02,0,0,0], acc=0.1, vel=0.1, wait=True)
             time.sleep(2)
-            #braille_bot.translatel_rel([0,0,0.001,0,0,0], acc=0.1, vel=0.1, wait=True)
+            #brailley.translatel_rel([0,0,0.001,0,0,0], acc=0.1, vel=0.1, wait=True)
             braille_bot.close()
         
