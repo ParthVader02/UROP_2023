@@ -6,7 +6,7 @@ import random
 import os
 from threading import Thread
 
-count = 1 #initialise data_count
+count = 500 #initialise data_count
 prev_y = 0
 prev_z = 0
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
@@ -33,7 +33,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
             capture_frame("raw_data") #capture frame
         else:
             rand_y = random.uniform(-0.003, 0.003) #generate random y translation
-            rand_z = random.uniform(-0.0004, 0) #generate random z translation
+            rand_z = random.uniform(-0.0003, 0) #generate random z translation
             brailley.translatel_rel([0,0,-prev_z,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random z
             time.sleep(0.5)
             brailley.translatel_rel([0, 0, +0.01, 0, 0, 0], 0.5, 0.2) #move up to avoid dragging on surface
@@ -64,7 +64,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         time.sleep(0.5)
         brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.0182491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
         count+=1 #increment count
 
     if __name__=='__main__':
@@ -74,15 +74,15 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
 
         brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.0182491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
         time.sleep(0.5)
 
         print("------------Starting data collection------------\r\n")
         dataset_size = 500 #set total number of data points to collect
 
-        while count < dataset_size: 
+        while count <= dataset_size: 
             print("Data point {} of {} collected".format(count, dataset_size)) #print progress
-            if count%20 == 0: #every 20 data points, scroll
+            if count%21 == 0: #every 20 data points, scroll (21 used as count starts at 1)
                 scroll_button() #scroll
             else:
                 move_robot() #move robot to next position and capture frame
