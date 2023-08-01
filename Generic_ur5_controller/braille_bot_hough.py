@@ -68,11 +68,11 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
     if __name__=='__main__':
         
         print("------------Configuring braille_bot------------\r\n")
-        #braille_bot = kgr.kg_robot(port=30000,db_host="169.254.252.50")
+        braille_bot = kgr.kg_robot(port=30000,db_host="169.254.252.50")
         print("----------------Hi braille_bot!-----------------\r\n\r\n")
 
         symbols = []
-        
+        print(braille_bot.getl()) 
         #braille_bot.movel([0.259405, -0.26263, 0.0197141, 2.09924, 2.33716, -0.000108163], acc=0.1, vel=0.1, wait=True)
         #time.sleep(2)
 
@@ -80,7 +80,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
             #braille_bot.translatel_rel([0,0,-0.002,0,0,0], acc=0.05, vel=0.1, wait=True)
             #braille_bot.servoj([0.259341, -0.262522, 0.0816393+0.01, -2.0993, -2.33719, 6.73604e-05], vel=1)
             #braille_bot.servoj([0.259341, -0.262522, 0.0816393-0.01, -2.0993, -2.33719, 6.73604e-05], vel=1)
-           #print(braille_bot.getl()) 
+           
             letters = [] #create empty list to store letters
             while digit.frame_count <=59:
                 frame = digit.get_frame()
