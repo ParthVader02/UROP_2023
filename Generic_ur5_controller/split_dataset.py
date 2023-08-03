@@ -14,8 +14,9 @@ for path in os.listdir(noisy_path):
     if os.path.isfile(os.path.join(noisy_path, path)):
         total_size += 1
 
-train_ratio = 0.8 #set ratio of training data to validation data
+target_size = 500 #set target size of dataset
 
+train_ratio = 0.8 #set ratio of training data to validation data 
 train_size = int(total_size*train_ratio) #calculate number of training images
 val_size = total_size - train_size #calculate number of validation images
 print("Total size: {}\r\nTrain size: {}\r\nValidation size: {}".format(total_size, train_size, val_size))
@@ -31,20 +32,23 @@ for image in os.scandir(noisy_path):
     input_image = cv2.resize(input_image, new_size)
     output_image = cv2.resize(output_image, new_size)
 
-    if count <= train_size: #if image is to be in training set
-        os.makedirs('train_inputs', exist_ok=True) 
-        base_path = os.path.join('train_inputs',"im{}.jpg".format(num)) #training inputs
-        cv2.imwrite(base_path, input_image)
+    if count <= target_size: #get target data set size
+        if count <= train_size: #if image is to be in training set
+            os.makedirs('train_inputs', exist_ok=True) 
+            base_path = os.path.join('train_inputs',"im{}.jpg".format(num)) #training inputs
+            cv2.imwrite(base_path, input_image)
 
-        os.makedirs('train_outputs', exist_ok=True) 
-        base_path = os.path.join('train_outputs',"im{}.jpg".format(num)) #training outputs
-        cv2.imwrite(base_path, output_image)
+            os.makedirs('train_outputs', exist_ok=True) 
+            base_path = os.path.join('train_outputs',"im{}.jpg".format(num)) #training outputs
+            cv2.imwrite(base_path, output_image)
+        else:
+            os.makedirs('val_inputs', exist_ok=True) 
+            base_path = os.path.join('val_inputs',"im{}.jpg".format(num)) #validation inputs
+            cv2.imwrite(base_path, input_image)
+
+            os.makedirs('val_outputs', exist_ok=True) 
+            base_path = os.path.join('val_outputs',"im{}.jpg".format(num)) #validation outputs
+            cv2.imwrite(base_path, output_image)
+        count += 1
     else:
-        os.makedirs('val_inputs', exist_ok=True) 
-        base_path = os.path.join('val_inputs',"im{}.jpg".format(num)) #validation inputs
-        cv2.imwrite(base_path, input_image)
-
-        os.makedirs('val_outputs', exist_ok=True) 
-        base_path = os.path.join('val_outputs',"im{}.jpg".format(num)) #validation outputs
-        cv2.imwrite(base_path, output_image)
-    count += 1
+        break

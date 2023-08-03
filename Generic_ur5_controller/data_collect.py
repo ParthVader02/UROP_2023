@@ -5,6 +5,7 @@ import time
 import random
 import os
 from threading import Thread
+import re
 
 count = 501 #initialise data_count
 prev_y = 0
@@ -66,6 +67,17 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         time.sleep(0.5)
         brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
 
+    def missing_images(folder_dir, total): #function to check for missing images
+        ref_list = list(range(1,total+1)) #create list of reference numbers
+        num_list = []
+        for image in os.scandir(folder_dir): #loop through images in folder
+            path = image.path
+            if (path.endswith('.jpg')):
+                num = (re.findall(r'\d+', path))[0] #get number from image name
+                num_list.append(int(num))
+        missing = list(set(ref_list) - set(num_list))  #find missing images
+        return missing
+
     if __name__=='__main__':
         t= Thread(target=read_camera) #start thread to read camera
         t.daemon = True #set thread to daemon so it closes when main thread closes
@@ -85,5 +97,11 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
                 scroll_button() #scroll
                 move_robot() #call move robot capture frame after scrolling
             else:
-                move_robot() #move robot to next position and capture frame
-        print("------------Data collection complete------------\r\n")
+                move_robot() #move robot to next position and capture frame 
+
+        missing = missing_images('raw_data', dataset_size) #check for missing images
+        if len(missing) > 0: #if there are missing images
+            for i in missing:
+                count = i #set count to missing image number
+                move_robot() #move robot capture frame
+print("------------Data collection complete------------\r\n")
