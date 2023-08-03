@@ -109,8 +109,11 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
             f.close()
 
           
-        brailley.movel([0.260394, -0.264857, 0.0135985, 2.09924, 2.33714, -0.000203997], 0.5, 0.2) 
-        time.sleep(1)    
+        brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
+        time.sleep(0.5)
+        brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        time.sleep(0.5)
+
 
         t.start()
 
@@ -119,9 +122,9 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         #time.sleep(2)
 
         time.sleep(0.5)
-        brailley.movel([0.143181, -0.265351, 0.0135279, 2.16869, 2.27278, -0.00021757], 5, 0.2)
+        brailley.movel([0.18, -0.271243, 0.0172491, 2.09817, 2.33561, -0.00188624], 50, 1) #move to scroll position
         
         data = pd.read_csv("row_data.csv")
         fig = data.plot().get_figure()
         fig.savefig("data_e.png")
-        plt.show()
+        plt.show()  

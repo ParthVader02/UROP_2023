@@ -6,7 +6,7 @@ import random
 import os
 from threading import Thread
 
-count = 500 #initialise data_count
+count = 1 #initialise data_count
 prev_y = 0
 prev_z = 0
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
@@ -54,8 +54,8 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
             prev_y = rand_y #store current y to use in next loop
             prev_z = rand_z #store current z to use in next loop
         count += 1 #increment counts
+
     def scroll_button():
-        global count
         brailley.movel([0.155901, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, -0.004, 0, 0, 0], 0.5, 0.2) #press scroll button
@@ -65,7 +65,6 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
         time.sleep(0.5)
         brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
-        count+=1 #increment count
 
     if __name__=='__main__':
         t= Thread(target=read_camera) #start thread to read camera
@@ -84,6 +83,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
             print("Data point {} of {} collected".format(count, dataset_size)) #print progress
             if count%21 == 0: #every 20 data points, scroll (21 used as count starts at 1)
                 scroll_button() #scroll
+                move_robot() #call move robot capture frame after scrolling
             else:
                 move_robot() #move robot to next position and capture frame
         print("------------Data collection complete------------\r\n")
