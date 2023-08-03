@@ -6,7 +6,7 @@ import random
 import os
 from threading import Thread
 
-count = 1 #initialise data_count
+count = 501 #initialise data_count
 prev_y = 0
 prev_z = 0
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
@@ -77,7 +77,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         time.sleep(0.5)
 
         print("------------Starting data collection------------\r\n")
-        dataset_size = 500 #set total number of data points to collect
+        dataset_size = 1000 #set total number of data points to collect
 
         while count <= dataset_size: 
             print("Data point {} of {} collected".format(count, dataset_size)) #print progress

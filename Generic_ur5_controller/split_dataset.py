@@ -26,6 +26,11 @@ for image in os.scandir(noisy_path):
     input_image = cv2.imread(path)
     output_image = cv2.imread('raw_data/im{}.jpg'.format(num)) #read in image
 
+    # resize the images for training on existing autoencoder
+    new_size = (128, 128) # new_size=(width, height)
+    input_image = cv2.resize(input_image, new_size)
+    output_image = cv2.resize(output_image, new_size)
+
     if count <= train_size: #if image is to be in training set
         os.makedirs('train_inputs', exist_ok=True) 
         base_path = os.path.join('train_inputs',"im{}.jpg".format(num)) #training inputs
