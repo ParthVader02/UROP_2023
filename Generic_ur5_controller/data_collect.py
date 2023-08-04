@@ -7,8 +7,8 @@ import os
 from threading import Thread
 import re
 
-count = 4001 #initialise data_count
-dataset_size = 4500 #set total number of data points to collect
+count = 1501 #initialise data_count
+dataset_size = 4000 #set total number of data points to collect
 
 prev_y = 0
 prev_z = 0
