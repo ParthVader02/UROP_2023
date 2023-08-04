@@ -7,7 +7,7 @@ def get_random_string(length):
     result_str = ''.join(random.choice(letters) for i in range(length))
     return result_str
 
-string_length = 1000
+string_length = 10000
 rand_string = get_random_string(string_length)
 
 text_file = open("training.txt", "w")

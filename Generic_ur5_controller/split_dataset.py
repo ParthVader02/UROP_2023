@@ -14,7 +14,7 @@ for path in os.listdir(noisy_path):
     if os.path.isfile(os.path.join(noisy_path, path)):
         total_size += 1
 
-target_size = 500 #set target size of dataset
+target_size = 100 #set target size of dataset
 
 train_ratio = 0.8 #set ratio of training data to validation data 
 train_size = int(total_size*train_ratio) #calculate number of training images
@@ -31,7 +31,7 @@ for image in os.scandir(noisy_path):
     new_size = (128, 128) # new_size=(width, height)
     input_image = cv2.resize(input_image, new_size)
     output_image = cv2.resize(output_image, new_size)
-
+    
     if count <= target_size: #get target data set size
         if count <= train_size: #if image is to be in training set
             os.makedirs('train_inputs', exist_ok=True) 
