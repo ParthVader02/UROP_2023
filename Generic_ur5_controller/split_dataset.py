@@ -13,13 +13,12 @@ for path in os.listdir(noisy_path):
     # check if current path is a file
     if os.path.isfile(os.path.join(noisy_path, path)):
         total_size += 1
-
-target_size = 100 #set target size of dataset
-
+print(total_size)
+target_size = 1250 #set target size of total dataset -> note: divide target training size by 0.8 to get total size
 train_ratio = 0.8 #set ratio of training data to validation data 
-train_size = int(total_size*train_ratio) #calculate number of training images
-val_size = total_size - train_size #calculate number of validation images
-print("Total size: {}\r\nTrain size: {}\r\nValidation size: {}".format(total_size, train_size, val_size))
+train_size = int(target_size*train_ratio) #calculate number of training images
+val_size = target_size - train_size #calculate number of validation images
+print("Total size: {}\r\nTrain size: {}\r\nValidation size: {}".format(target_size, train_size, val_size))
 
 for image in os.scandir(noisy_path):
     path = image.path
