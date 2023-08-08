@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import os
-img = cv2.imread('raw_data/im4.jpg')
+img = cv2.imread('val_outputs/im5.jpg')
 b,g,r = cv2.split(img)
 
 grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
