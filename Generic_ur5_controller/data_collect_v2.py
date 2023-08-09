@@ -8,11 +8,14 @@ from threading import Thread
 import re
 
 count = 1 #initialise data_count
-dataset_size = 20 #set total number of data points to collect
+dataset_size = 21 #set total number of data points to collect
 
 static_collect = False #set to true if collecting static data
-dynamic_collect = False #set to true if collecting dynamic data
-distance= -0.0058 #set distance to move between each data point
+dynamic_collect = True #set to true if collecting dynamic data
+
+velocity = 0.2 #set velocity for sliding motion
+
+slide_capture_flag = False #initialise slide capture flag
 prev_y = 0
 prev_z = 0
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
@@ -26,15 +29,21 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
          global frame
          while True:
             frame = digit.get_frame() #get frame from camera
+            if dynamic_collect == True:
+                if slide_capture_flag==True: 
+                    capture_frame("blurry")
 
     def capture_frame(dir_path): #function to capture frame and save it
+        global count
         os.makedirs(dir_path, exist_ok=True) 
         base_path = os.path.join(dir_path,"im{}.jpg".format(count)) #create path to save frame
         cv2.imwrite(base_path, frame) 
-        
+        count += 1 #increment counts
+    
     def move_robot(): #fixed movements for each data collection step
         global count #use global count variable (need to tell function this or it doesnt work) 
         global prev_y, prev_z
+        global slide_capture_flag
         if static_collect == True:
             if count%20 ==1: 
                 capture_frame("raw_data") #capture frame
@@ -47,7 +56,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
                 time.sleep(0.5)
                 #brailley.translatel_rel([0,-prev_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random y
                 #time.sleep(0.5)
-                brailley.translatel_rel([-0.0058, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
+                brailley.translatel_rel([-velocity*1/60, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
                 time.sleep(0.5)
 
                 #brailley.translatel_rel([0,rand_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #move to random y position around cell
@@ -60,9 +69,9 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
                 capture_frame("raw_data") #capture frame
                 #prev_y = rand_y #store current y to use in next loop
                 #prev_z = rand_z #store current z to use in next loop
-            count += 1 #increment counts
-        #elif dynamic_collect == True:
-
+        elif dynamic_collect == True:
+            slide_capture_flag = True
+            brailley.movel([0.179944, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, velocity) #slide across one row
 
     def scroll_button():
         brailley.movel([0.155901, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
