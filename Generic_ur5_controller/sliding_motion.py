@@ -29,17 +29,17 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         while True:
             frame = digit.get_frame()
             
-            os.makedirs('autoencoder/load_dataset/data/test', exist_ok=True) 
-            base_path = os.path.join('autoencoder/load_dataset/data/test',"im{}.jpg".format(digit.frame_count)) #create path to save frame
-            new_size = (128, 128) # new_size=(width, height)
-            input_image = cv2.resize(frame, new_size)
-            cv2.imwrite(base_path, input_image)
+            # os.makedirs('autoencoder/load_dataset/data/test', exist_ok=True) 
+            # base_path = os.path.join('autoencoder/load_dataset/data/test',"im{}.jpg".format(digit.frame_count)) #create path to save frame
+            # new_size = (128, 128) # new_size=(width, height)
+            # input_image = cv2.resize(frame, new_size)
+            # cv2.imwrite(base_path, input_image)
 
-            os.makedirs('autoencoder/load_dataset/data/test_outputs', exist_ok=True)  #repeat to make a folder of outputs so autoencoder code works
-            base_path = os.path.join('autoencoder/load_dataset/data/test_outputs',"im{}.jpg".format(digit.frame_count)) #create path to save frame
-            new_size = (128, 128) # new_size=(width, height)
-            input_image = cv2.resize(frame, new_size)
-            cv2.imwrite(base_path, input_image)
+            # os.makedirs('autoencoder/load_dataset/data/test_outputs', exist_ok=True)  #repeat to make a folder of outputs so autoencoder code works
+            # base_path = os.path.join('autoencoder/load_dataset/data/test_outputs',"im{}.jpg".format(digit.frame_count)) #create path to save frame
+            # new_size = (128, 128) # new_size=(width, height)
+            # input_image = cv2.resize(frame, new_size)
+            # cv2.imwrite(base_path, input_image)
             #frame = frame[100:230, 75:150]#crop frame to only show braille area
             #cv2.imshow("frame", frame)
             #cv2.waitKey(1)
@@ -133,7 +133,10 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         #time.sleep(2)
 
         time.sleep(0.5)
-        brailley.movel([0.18, -0.271243, 0.0172491, 2.09817, 2.33561, -0.00188624], 50, 0.3) #move to scroll position
+        for i in range(0,18):
+            brailley.translatel_rel([-0.0058, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
+            time.sleep(0.5)
+        #brailley.movel([0.18, -0.271243, 0.0172491, 2.09817, 2.33561, -0.00188624], 50, 0.3) #move to scroll position
         
         data = pd.read_csv("row_data.csv")
         fig = data.plot().get_figure()
