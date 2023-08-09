@@ -8,8 +8,11 @@ from threading import Thread
 import re
 
 count = 1 #initialise data_count
-dataset_size = 100 #set total number of data points to collect
+dataset_size = 20 #set total number of data points to collect
 
+static_collect = False #set to true if collecting static data
+dynamic_collect = False #set to true if collecting dynamic data
+distance= -0.0058 #set distance to move between each data point
 prev_y = 0
 prev_z = 0
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
@@ -32,31 +35,34 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
     def move_robot(): #fixed movements for each data collection step
         global count #use global count variable (need to tell function this or it doesnt work) 
         global prev_y, prev_z
-        if count%20 ==1: 
-            capture_frame("raw_data") #capture frame
-        else:
-            rand_y = random.uniform(-0.003, 0.003) #generate random y translation
-            rand_z = random.uniform(-0.0003, 0) #generate random z translation
-            brailley.translatel_rel([0,0,-prev_z,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random z
-            time.sleep(0.5)
-            brailley.translatel_rel([0, 0, +0.01, 0, 0, 0], 0.5, 0.2) #move up to avoid dragging on surface
-            time.sleep(0.5)
-            brailley.translatel_rel([0,-prev_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random y
-            time.sleep(0.5)
-            brailley.translatel_rel([-0.0058, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
-            time.sleep(0.5)
+        if static_collect == True:
+            if count%20 ==1: 
+                capture_frame("raw_data") #capture frame
+            else:
+                #rand_y = random.uniform(-0.003, 0.003) #generate random y translation
+                #rand_z = random.uniform(-0.0003, 0) #generate random z translation
+                #brailley.translatel_rel([0,0,-prev_z,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random z
+                #time.sleep(0.5)
+                brailley.translatel_rel([0, 0, +0.01, 0, 0, 0], 0.5, 0.2) #move up to avoid dragging on surface
+                time.sleep(0.5)
+                #brailley.translatel_rel([0,-prev_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #remove random y
+                #time.sleep(0.5)
+                brailley.translatel_rel([-0.0058, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
+                time.sleep(0.5)
 
-            brailley.translatel_rel([0,rand_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #move to random y position around cell
-            time.sleep(0.5) 
-            brailley.translatel_rel([0, 0, -0.01, 0, 0, 0], 0.5, 0.2)  #move down to cell
-            time.sleep(0.5)
-            brailley.translatel_rel([0,0,rand_z,0,0,0], acc=0.5, vel=0.2, wait=True) #move to random z position 
-            time.sleep(0.5)
+                #brailley.translatel_rel([0,rand_y,0,0,0,0], acc=0.5, vel=0.2, wait=True) #move to random y position around cell
+                #time.sleep(0.5) 
+                brailley.translatel_rel([0, 0, -0.01, 0, 0, 0], 0.5, 0.2)  #move down to cell
+                time.sleep(0.5)
+                #brailley.translatel_rel([0,0,rand_z,0,0,0], acc=0.5, vel=0.2, wait=True) #move to random z position 
+                #time.sleep(0.5)
 
-            capture_frame("raw_data") #capture frame
-            prev_y = rand_y #store current y to use in next loop
-            prev_z = rand_z #store current z to use in next loop
-        count += 1 #increment counts
+                capture_frame("raw_data") #capture frame
+                #prev_y = rand_y #store current y to use in next loop
+                #prev_z = rand_z #store current z to use in next loop
+            count += 1 #increment counts
+        #elif dynamic_collect == True:
+
 
     def scroll_button():
         brailley.movel([0.155901, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
@@ -94,6 +100,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         while count <= dataset_size: 
             print("Data point {} of {} collected".format(count, dataset_size)) #print progress
             if count%21 == 0: #every 20 data points, scroll (21 used as count starts at 1)
+                print(brailley.getl())
                 scroll_button() #scroll
                 move_robot() #call move robot capture frame after scrolling
             else:
