@@ -7,11 +7,15 @@ from threading import Thread
 import csv
 import random
 
-dataset_size = 28
+dataset_size = 100 #set approx dataset size
 dynamic_count = 1
+row_counter = 0
 
-velocity = 0.9 #set velocity for sliding motion
-start = time.time()
+z_depth = 0.0145 #set z depth of sensor, with medical tape need to be lower for clarity
+y_offset = -0.27 #set y offset of sensor
+
+velocity = 0 #initialise velocity
+start = 0
 time_list = []
 slide_capture_flag = False #initialise slide capture flag
 
@@ -27,10 +31,12 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
          global start, time_list
          while True:
             frame = digit.get_frame() #get frame from camera
-            if slide_capture_flag == True:
-                capture_frame("blurry")
-                elapsed = time.time() - start
-                time_list.append(elapsed)
+            if slide_capture_flag == True: 
+                t1 = time.time() - start
+                capture_frame("blurry") #capture frame
+                t2 = time.time() - start
+                time_of_capture = (t1+t2)/2 #average time of capture
+                time_list.append(time_of_capture)
 
     def capture_frame(dir_path): #function to capture frame and save it
         global static_collect, dynamic_collect, static_count, dynamic_count
@@ -40,50 +46,55 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         dynamic_count += 1 #increment counts
     
     def move_robot(): #fixed movements for each data collection step
-        global dynamic_count, velocity
+        global dynamic_count, velocity, row_counter
         global slide_capture_flag
         global start, time_list
 
         time_list = [] #reset time list
         start = time.time()
         slide_capture_flag = True
-        brailley.movel([0.17, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 500, velocity) #slide across one row
+        brailley.movel([0.169, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
         slide_capture_flag = False
         time.sleep(0.5)
-        scroll_button()
-        with open('time_list.csv', 'a') as f:
+        scroll_button() #press scroll button
+        with open('time_list.csv', 'a') as f: #append string of letters, velocity and times to csv
                 write = csv.writer(f)
-                time_list.insert(0, velocity)
-                write.writerow(time_list)
+                time_list.insert(0, velocity) #insert velocity at start of list
+                with open('training.txt', 'r') as f:
+                    doc = f.read()
+                    row_string = doc[(20*row_counter):(20*row_counter) +20] #get string of letters for each row
+                    time_list.insert(0, row_string) #insert string of letters at start of list
+                    row_counter += 1
+                write.writerow(time_list) #write row to csv
 
     def scroll_button():
-        brailley.movel([0.155901, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
+        brailley.movel([0.15, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
         time.sleep(0.5)
-        brailley.translatel_rel([0, 0, -0.004, 0, 0, 0], 0.5, 0.2) #press scroll button
+        brailley.translatel_rel([0, 0, -0.006, 0, 0, 0], 0.5, 0.2) #press scroll button
         time.sleep(0.5)
-        brailley.translatel_rel([0, 0, 0.004, 0, 0, 0], 0.5, 0.2) #move back to scroll position
+        brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
 
     if __name__=='__main__':
         t= Thread(target=read_camera) #start thread to read camera
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
         
-        brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
 
         with open('time_list.csv', 'w') as f:
-                write = csv.writer(f)
+                write = csv.writer(f) #create csv file to write to
 
         print("------------Starting data collection------------\r\n")
 
-        while dynamic_count < dataset_size:
-            velocity = random.uniform(0.2, 0.8) #randomise velocity
+        while dynamic_count < dataset_size: #get at least the target data set size
+            velocity = random.uniform(0.2, 0.4) #randomise velocity
             move_robot() #movements
             print("Data point {} of {} collected".format(dynamic_count, dataset_size)) #print progress
 
