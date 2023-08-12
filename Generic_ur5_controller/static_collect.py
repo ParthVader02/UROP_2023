@@ -6,7 +6,7 @@ import os
 from threading import Thread
 import csv
 
-static_count = 1 #initialise data_count
+static_count = 101 #initialise data_count
 dataset_size = 0 #initialise dataset_size
 
 z_depth = 0.0165#set z depth of sensor, with medical tape need to be lower for clarity
