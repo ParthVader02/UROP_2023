@@ -6,7 +6,7 @@ import os
 from threading import Thread
 import csv
 
-static_count = 101 #initialise data_count
+static_count = 1 #initialise data_count
 dataset_size = 0 #initialise dataset_size
 
 z_depth = 0.0165#set z depth of sensor, with medical tape need to be lower for clarity
@@ -17,7 +17,7 @@ for path in os.listdir('blurry'):
     if os.path.isfile(os.path.join('blurry', path)):
         dataset_size += 1
 
-with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit,
+with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
     frame = digit.get_frame()
     print("------------Configuring brailley------------\r\n")
@@ -42,7 +42,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
             for row in reader:
                 velocity = float(row[1])
                 time_list = row[2:]
-                dt = [0, 0.015]  #initialise dt list with first two values to match slow moving start
+                dt = [0, 0.01]  #initialise dt list with first two values to match slow moving start
                 for x, y in zip(time_list[0::], time_list[1::]):
                     x = float(x)
                     y = float(y)
@@ -50,6 +50,9 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
 
                 for i in range(0, len(dt)-1):#go through each time step
                     dt[i] = float(dt[i])    
+
+                    if i == len(dt)-2: #if last time step
+                        dt[i] = 0 #set dt to match slow moving end
                 
                     capture_frame("sharp") #capture frame
                     print("Captured frame {}".format(static_count))

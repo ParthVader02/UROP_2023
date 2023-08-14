@@ -7,11 +7,11 @@ from threading import Thread
 import csv
 import random
 
-dataset_size = 110 #set approx dataset size
-dynamic_count = 101
+dataset_size = 1000 #set approx dataset size
+dynamic_count = 1
 row_counter = 0
 
-z_depth = 0.0145 #set z depth of sensor, with medical tape need to be lower for clarity
+z_depth = 0.0149 #set z depth of sensor, with medical tape need to be lower for clarity
 y_offset = -0.27 #set y offset of sensor
 
 velocity = 0 #initialise velocity
