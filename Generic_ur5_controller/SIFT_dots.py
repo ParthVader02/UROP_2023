@@ -5,7 +5,7 @@ import re
 
 img = cv2.imread("sharp/im5.jpg")
 
-thresholds = [0.01, 0.02, 0.03]
+thresholds = [0.02, 0.03]
 features = []
 
 for thresh in thresholds:

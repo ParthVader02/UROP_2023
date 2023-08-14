@@ -9,7 +9,7 @@ import random
 
 dataset_size = 20 #set approx dataset size
 dynamic_count = 1
-row_counter = 50
+row_counter = 1
 
 z_depth = 0.0149 #set z depth of sensor, with medical tape need to be lower for clarity
 y_offset = -0.27 #set y offset of sensor
