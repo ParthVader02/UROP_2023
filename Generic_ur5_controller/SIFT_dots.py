@@ -3,7 +3,7 @@ import numpy as np
 import os
 import re
 
-img = cv2.imread("raw_data/im5.jpg")
+img = cv2.imread("sharp/im5.jpg")
 
 thresholds = [0.01, 0.02, 0.03]
 features = []
