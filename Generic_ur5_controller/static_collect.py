@@ -9,7 +9,7 @@ import csv
 static_count = 1 #initialise data_count
 dataset_size = 0 #initialise dataset_size
 
-z_depth = 0.016#set z depth of sensor 
+z_depth = 0.0158#set z depth of sensor 
 y_offset = -0.272 #set y offset of sensor
 
 for path in os.listdir('blurry'):

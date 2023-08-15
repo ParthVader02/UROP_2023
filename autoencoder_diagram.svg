@@ -28,7 +28,7 @@
      inkscape:document-units="mm"
      inkscape:zoom="1.0620589"
      inkscape:cx="415.70199"
-     inkscape:cy="180.31015"
+     inkscape:cy="330.96093"
      inkscape:window-width="1920"
      inkscape:window-height="1043"
      inkscape:window-x="0"
@@ -41,7 +41,7 @@
      id="layer1"><g
        id="g1"
        transform="matrix(0.16259992,0,0,0.16259992,81.738367,63.959255)"
-       inkscape:export-filename="autoencoder_diagram"
+       inkscape:export-filename="ae_diagram.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96"><path
          d="m -255.08336,71.552389 -8.4018,-1.176721 m 0,-369.983408 V 70.375668 m 0,0 L -405.8119,205.8688 m 150.72854,-504.29982 V 71.552389 m 0,0 -142.32674,135.493131"

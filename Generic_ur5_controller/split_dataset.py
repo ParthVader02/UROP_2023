@@ -15,8 +15,8 @@ for path in os.listdir(noisy_path):
         total_size += 1
 print(total_size)
 
-target_size = 1002 #set target size of total dataset -> note: divide target training size by 0.8 to get total size
-train_ratio = 0.9 #set ratio of training data to validation data 
+target_size = 1000 #set target size of total dataset -> note: divide target training size by 0.8 to get total size
+train_ratio = 0.8 #set ratio of training data to validation data 
 train_size = int(target_size*train_ratio) #calculate number of training images
 val_size = target_size - train_size #calculate number of validation images
 print("Total size: {}\r\nTrain size: {}\r\nValidation size: {}".format(target_size, train_size, val_size))
