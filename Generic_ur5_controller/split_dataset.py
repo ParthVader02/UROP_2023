@@ -4,28 +4,28 @@ import numpy as np
 import re
 
 # folder path
-noisy_path = 'blurry'
+
 total_size = 0
 count = 0
 
 # Iterate directory
-for path in os.listdir(noisy_path):
+for path in os.listdir('sharp'):
     # check if current path is a file
-    if os.path.isfile(os.path.join(noisy_path, path)):
+    if os.path.isfile(os.path.join('sharp', path)):
         total_size += 1
 print(total_size)
 
-target_size = 1000 #set target size of total dataset -> note: divide target training size by 0.8 to get total size
-train_ratio = 0.8 #set ratio of training data to validation data 
+target_size = 511 #set target size of total dataset -> note: divide target training size by 0.8 to get total size
+train_ratio = 0.9 #set ratio of training data to validation data 
 train_size = int(target_size*train_ratio) #calculate number of training images
 val_size = target_size - train_size #calculate number of validation images
 print("Total size: {}\r\nTrain size: {}\r\nValidation size: {}".format(target_size, train_size, val_size))
 
-for image in os.scandir(noisy_path):
+for image in os.scandir('sharp'):
     path = image.path
     num = (re.findall(r'\d+', path))[0]
-    input_image = cv2.imread(path)
-    output_image = cv2.imread('sharp/im{}.jpg'.format(num)) #read in image
+    output_image = cv2.imread(path)
+    input_image = cv2.imread('blurry/im{}.jpg'.format(num)) #read in image
 
     # resize the images for training on existing autoencoder
     new_size = (128, 128) # new_size=(width, height)

@@ -6,8 +6,9 @@ import os
 from threading import Thread
 import csv
 
-static_count = 1 #initialise data_count
+static_count = 404 #initialise data_count
 dataset_size = 0 #initialise dataset_size
+length = 0 #initialise row
 
 z_depth = 0.0158#set z depth of sensor 
 y_offset = -0.272 #set y offset of sensor
@@ -36,24 +37,24 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         
     def move_robot(): #fixed movements for each data collection step
         global static_count #use global count variable (need to tell function this or it doesnt work) 
-
+        global row_count
+        global length
         with open('time_list.csv', 'r') as f:
             reader = csv.reader(f)
             for row in reader:
                 velocity = float(row[1])
                 time_list = row[2:]
-                dt = [0, 0.01]  #initialise dt list with first two values to match slow moving start
+                time_list[0] = 0
+                dt = [0,0.005]
                 for x, y in zip(time_list[0::], time_list[1::]):
                     x = float(x)
                     y = float(y)
                     dt.append((y-x))
+                print(len(dt))
 
                 for i in range(0, len(dt)-1):#go through each time step
-                    dt[i] = float(dt[i])    
+                    dt[i] = float(dt[i])  
 
-                    if i == len(dt)-2: #if last time step
-                        dt[i] = 0 #set dt to match slow moving end
-                
                     capture_frame("sharp") #capture frame
                     print("Captured frame {}".format(static_count))
 

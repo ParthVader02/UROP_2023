@@ -30,12 +30,12 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
          global frame
          global start, time_list
          while True:
+            t1 = time.time() - start
             frame = digit.get_frame() #get frame from camera
+            t2 = time.time() - start
+            time_of_capture = (t1+t2)/2 #average time of capture
             if slide_capture_flag == True: 
-                t1 = time.time() - start
                 capture_frame("blurry") #capture frame
-                t2 = time.time() - start
-                time_of_capture = (t1+t2)/2 #average time of capture
                 time_list.append(time_of_capture)
 
     def capture_frame(dir_path): #function to capture frame and save it
@@ -74,7 +74,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
         time.sleep(0.5)
-        brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484,y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
         brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
 
@@ -83,7 +83,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
         
-        brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484, y_offset, z_depth+0.1, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
         brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
@@ -94,7 +94,8 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         print("------------Starting data collection------------\r\n")
 
         while dynamic_count < dataset_size: #get at least the target data set size
-            velocity = random.uniform(0.2, 0.4) #randomise velocity
+            #velocity = random.uniform(0.2, 0.4) #randomise velocity
+            velocity = 0.3
             move_robot() #movements
             print("Data point {} of {} collected".format(dynamic_count, dataset_size)) #print progress
 
