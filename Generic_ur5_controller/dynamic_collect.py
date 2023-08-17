@@ -11,7 +11,7 @@ dataset_size = 1000 #set approx dataset size
 dynamic_count = 1
 row_counter = 0
 
-z_depth = 0.0149 #set z depth of sensor, with medical tape need to be lower for clarity
+z_depth = 0.014 #set z depth of sensor, with medical tape need to be lower for clarity
 y_offset = -0.27 #set y offset of sensor
 
 velocity = 0 #initialise velocity
@@ -51,8 +51,8 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         global start, time_list
 
         time_list = [] #reset time list
-        start = time.time()
         slide_capture_flag = True
+        start = time.time()
         brailley.movel([0.169, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
         slide_capture_flag = False
         time.sleep(0.5)
