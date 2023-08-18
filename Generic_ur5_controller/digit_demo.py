@@ -156,16 +156,15 @@ class DisplayImage():
 
 def example_capture_video():
 
-    with (DigitSensor(serialno='D20652', resolution='QVGA', framerate='60') as digit,
+    with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit,
             DisplayImage(window_name='DIGIT Demo') as display):
 
         while True:
             frame = digit.get_frame()
-            display.show_image([frame],window_scale=2)
-            if digit.frame_count == 30:
-                cv2.imwrite("reference_frame.jpg", frame)
+            display.show_image([frame],window_scale=1)
             # '27' is the escape key
             if cv2.waitKey(1)==27:
+                cv2.imwrite("reference_frame.jpg", frame)
                 break
 
 if __name__=='__main__':

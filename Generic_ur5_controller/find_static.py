@@ -11,7 +11,7 @@ static_count = 1 #initialise data_count
 dataset_size = 0 #initialise dataset_size
 row_count = 0 #initialise row_count
 
-z_depth = 0.0158#set z depth of sensor 
+z_depth = 0.015#set z depth of sensor 
 y_offset = -0.271 #set y offset of sensor
 positions = [] #initialise list of positions
 
@@ -44,10 +44,10 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         dx = 0
         if key == Key.tab:
             print("left")
-            dx = 0.001
+            dx = -0.001
         if key == Key.space:
             print("right")
-            dx = -0.001
+            dx = 0.001
         if key == Key.enter:
             print("position saved")
             print(brailley.getl()[0])
@@ -56,7 +56,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         if key == Key.delete:
             with open('positions.csv', 'w') as f:
                 write = csv.writer(f)
-                write.writerows(positions)
+                write.writerow(positions)
             return False
         
         brailley.translatel_rel([dx,0,0,0,0,0], 0.5, 0.2) #move to next position
@@ -68,7 +68,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         global static_count #use global count variable (need to tell function this or it doesnt work) 
         global row_count, offset
         global length
-        velocity  = 0.17
+        velocity  = 0.12
         while True:
             # Collect all event until released
             with Listener(on_press = process) as listener:
@@ -85,18 +85,18 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
         time.sleep(0.5)
-        brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.172,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+        brailley.movel([0.172,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
 
     if __name__=='__main__':
         t= Thread(target=read_camera) #start thread to read camera
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
 
-        brailley.movel([0.293484, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.172, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+        brailley.movel([0.172, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
 
         print("------------Starting data collection------------\r\n")

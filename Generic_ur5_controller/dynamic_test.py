@@ -11,7 +11,7 @@ dataset_size = 20 #set approx dataset size
 dynamic_count = 1
 row_counter = 1
 
-z_depth = 0.0148 #set z depth of sensor, with medical tape need to be lower for clarity
+z_depth = 0.0145 #set z depth of sensor, with medical tape need to be lower for clarity
 y_offset = -0.27 #set y offset of sensor
 
 velocity = 0 #initialise velocity
@@ -52,9 +52,11 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
 
         time_list = [] #reset time list
         slide_capture_flag = True
-        #start = time.time()
+        start_1= time.time()
         brailley.movel([0.169, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
         slide_capture_flag = False
+        end = time.time()
+        print(end-start_1)
         time.sleep(0.5)
         scroll_button() #press scroll button
         with open('test_time_list.csv', 'a') as f: #append string of letters, velocity and times to csv
@@ -94,7 +96,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         print("------------Starting data collection------------\r\n")
 
         while dynamic_count < dataset_size: #get at least the target data set size
-            velocity = 0.1
+            velocity = 0.15
             move_robot() #movements
             print("Data point {} of {} collected".format(dynamic_count, dataset_size)) #print progress
 

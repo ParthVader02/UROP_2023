@@ -25,6 +25,9 @@ for image in os.scandir('sharp'): #iterate through images
     sharp = cv2.imread(path)
     blurry = cv2.imread('blurry/im{}.jpg'.format(num)) #read in image
 
+    print(path)
+    print(num)
+
     hori = np.concatenate((blurry, sharp), axis=1) #concatenate images
     cv2.imshow('pair', hori) #display images side by side
     cv2.waitKey(0) #wait for key press
