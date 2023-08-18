@@ -5,9 +5,9 @@ import re
 from scipy.spatial import KDTree, cKDTree
 import matplotlib.pyplot as plt
 
-img = cv2.imread("sharp/im234.jpg")
+img = cv2.imread("sharp/im5.jpg")
 
-thresh = 0.02
+thresh = 0.01
 
 sift = cv2.SIFT_create(contrastThreshold=thresh, edgeThreshold=10, sigma=0.8)
 #contrastThreshold basically controls the number of keypoints detected by strength
@@ -17,7 +17,7 @@ kp = sift.detect(img,None)
 pts =  [key_point.pt for key_point in kp]
 pts = np.array(pts)
 
-#print(pts)
+print(pts)
 
 tree = KDTree(pts)
 

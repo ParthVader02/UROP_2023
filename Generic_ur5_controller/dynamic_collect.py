@@ -7,11 +7,11 @@ from threading import Thread
 import csv
 import random
 
-dataset_size = 1000 #set approx dataset size
+dataset_size = 10 #set approx dataset size
 dynamic_count = 1
 row_counter = 0
 
-z_depth = 0.014 #set z depth of sensor, with medical tape need to be lower for clarity
+z_depth = 0.0145 #set z depth of sensor, with medical tape need to be lower for clarity
 y_offset = -0.27 #set y offset of sensor
 
 velocity = 0 #initialise velocity
@@ -30,10 +30,10 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
          global frame
          global start, time_list
          while True:
-            t1 = time.time() - start
+            t = time.time()
+            start = t -start 
             frame = digit.get_frame() #get frame from camera
-            t2 = time.time() - start
-            time_of_capture = (t1+t2)/2 #average time of capture
+            time_of_capture =t #average time of capture
             if slide_capture_flag == True: 
                 capture_frame("blurry") #capture frame
                 time_list.append(time_of_capture)
@@ -77,25 +77,27 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         brailley.movel([0.293484,y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
         brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+        time.sleep(0.5)
 
     if __name__=='__main__':
         t= Thread(target=read_camera) #start thread to read camera
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
         
-        brailley.movel([0.293484, y_offset, z_depth+0.1, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
         brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
 
-        with open('time_list.csv', 'w') as f:
-                write = csv.writer(f) #create csv file to write to
+        if row_counter == 0:
+            with open('time_list.csv', 'w') as f:
+                    write = csv.writer(f) #create csv file to write to
 
         print("------------Starting data collection------------\r\n")
 
         while dynamic_count < dataset_size: #get at least the target data set size
             #velocity = random.uniform(0.2, 0.4) #randomise velocity
-            velocity = 0.3
+            velocity = 0.15
             move_robot() #movements
             print("Data point {} of {} collected".format(dynamic_count, dataset_size)) #print progress
 

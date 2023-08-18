@@ -11,7 +11,7 @@ dataset_size = 20 #set approx dataset size
 dynamic_count = 1
 row_counter = 1
 
-z_depth = 0.014 #set z depth of sensor, with medical tape need to be lower for clarity
+z_depth = 0.0148 #set z depth of sensor, with medical tape need to be lower for clarity
 y_offset = -0.27 #set y offset of sensor
 
 velocity = 0 #initialise velocity
@@ -30,10 +30,10 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
          global frame
          global start, time_list
          while True:
-            t1 = time.time() - start
+            t = time.time()
+            start = t -start 
             frame = digit.get_frame() #get frame from camera
-            t2 = time.time() - start
-            time_of_capture = (t1+t2)/2 #average time of capture
+            time_of_capture =t #average time of capture
             if slide_capture_flag == True: 
                 capture_frame("test_blurry") #capture frame
                 time_list.append(time_of_capture)
@@ -52,7 +52,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
 
         time_list = [] #reset time list
         slide_capture_flag = True
-        start = time.time()
+        #start = time.time()
         brailley.movel([0.169, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
         slide_capture_flag = False
         time.sleep(0.5)
@@ -74,7 +74,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
         time.sleep(0.5)
-        brailley.movel([0.293484,y_offset, z_depth+0.1, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484,y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
         brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
 
@@ -83,7 +83,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
         
-        brailley.movel([0.293484, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
         brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
@@ -94,7 +94,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         print("------------Starting data collection------------\r\n")
 
         while dynamic_count < dataset_size: #get at least the target data set size
-            velocity = random.uniform(0.2, 0.4) #randomise velocity
+            velocity = 0.1
             move_robot() #movements
             print("Data point {} of {} collected".format(dynamic_count, dataset_size)) #print progress
 

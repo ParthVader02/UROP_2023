@@ -15,7 +15,7 @@ for path in os.listdir('sharp'):
         total_size += 1
 print(total_size)
 
-target_size = 511 #set target size of total dataset -> note: divide target training size by 0.8 to get total size
+target_size = 107 #set target size of total dataset -> note: divide target training size by 0.8 to get total size
 train_ratio = 0.9 #set ratio of training data to validation data 
 train_size = int(target_size*train_ratio) #calculate number of training images
 val_size = target_size - train_size #calculate number of validation images
@@ -34,16 +34,16 @@ for image in os.scandir('sharp'):
     
     if count <= target_size: #get target data set size
         if count <= train_size: #if image is to be in training set
-            os.makedirs('train_inputs', exist_ok=True) 
-            base_path = os.path.join('train_inputs',"im{}.jpg".format(num)) #training inputs
+            os.makedirs('train', exist_ok=True) 
+            base_path = os.path.join('train',"im{}.jpg".format(num)) #training inputs
             cv2.imwrite(base_path, input_image)
 
             os.makedirs('train_outputs', exist_ok=True) 
             base_path = os.path.join('train_outputs',"im{}.jpg".format(num)) #training outputs
             cv2.imwrite(base_path, output_image)
         else:
-            os.makedirs('val_inputs', exist_ok=True) 
-            base_path = os.path.join('val_inputs',"im{}.jpg".format(num)) #validation inputs
+            os.makedirs('val', exist_ok=True) 
+            base_path = os.path.join('val',"im{}.jpg".format(num)) #validation inputs
             cv2.imwrite(base_path, input_image)
 
             os.makedirs('val_outputs', exist_ok=True) 
