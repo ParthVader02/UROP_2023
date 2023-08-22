@@ -11,7 +11,7 @@ static_count = 1 #initialise data_count
 dataset_size = 0 #initialise dataset_size
 row_count = 0 #initialise row_count
 
-z_depth = 0.015#set z depth of sensor 
+z_depth = 0.016#set z depth of sensor 
 y_offset = -0.271 #set y offset of sensor
 positions = [] #initialise list of positions
 

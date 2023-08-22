@@ -8,7 +8,7 @@ from threading import Thread
 import re
 
 count = 1 #initialise data_count
-dataset_size = 100 #set total number of data points to collect
+dataset_size = 1000 #set total number of data points to collect
 
 prev_y = 0
 prev_z = 0
@@ -65,9 +65,10 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, 0.004, 0, 0, 0], 0.5, 0.2) #move back to scroll position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484, -0.271902, 0.02, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        brailley.movel([0.293484, -0.271902, 0.0172491, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+        time.sleep(0.5)
 
     def missing_images(folder_dir, total): #function to check for missing images
         ref_list = list(range(1,total+1)) #create list of reference numbers
@@ -85,9 +86,9 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
 
-        brailley.movel([0.290128, -0.271902, 0.02, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484, -0.271902, 0.02, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.290128, -0.271902, 0.0172491, 2.09818, 2.33554, -0.00188674], 0.5, 0.2) #move to first position
+        brailley.movel([0.293484, -0.271902, 0.0172491, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
 
         print("------------Starting data collection------------\r\n")

@@ -13,11 +13,25 @@ row_count = 0 #initialise row_count
 z_depth = 0.015#set z depth of sensor 
 y_offset = -0.27 #set y offset of sensor
 positions = []
+offsets = []
+offset_counter= 0
 
 with open("positions.csv", "r") as f:
     reader = csv.reader(f)
     row = next(reader)  # gets the first line
     positions = row
+print(len(positions))
+#print(positions)
+with open("Offsets.csv", "r") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        if row[0] != 'NaN' and row[0] != '0':
+            x = float(row[0])
+            y = float(row[1])
+            offsets.append([x,y])
+        else:
+            offsets.append(row)
+    #print(offsets)
 
 for path in os.listdir('blurry'):
     # check if current path is a file
@@ -44,25 +58,33 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         
     def move_robot(): #fixed movements for each data collection step
         global static_count #use global count variable (need to tell function this or it doesnt work) 
-        global row_count, offset
+        global offsets, offset_counter
         global positions
-        velocity  = 0.15
-        for pos in positions:
-            capture_frame("sharp") #capture frame
-            print("Captured frame {}".format(static_count))
-            
-            brailley.translatel_rel([0, 0, +0.01, 0, 0, 0], 0.5, 0.2) #move up to avoid dragging on surface
-            time.sleep(0.5)
-            
-            brailley.movel([pos,y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to next position
-            time.sleep(0.5)
 
-            brailley.translatel_rel([0, 0, -0.01, 0, 0, 0], 0.5, 0.2)  #move down to cell
-            time.sleep(0.5)
+        for pos in positions:
+            if offsets[offset_counter][0] == 'NaN' or offsets[offset_counter][0] == '0':
+                offset_counter +=1
+                static_count +=1
+                print("Frame {} rejected".format(static_count)) 
+            else:
+                off_x = float(offsets[offset_counter][0])
+                off_y = float(offsets[offset_counter][1])
+                print(pos)
+                print(off_x)
+                brailley.movel([float(pos)+(off_x*0.001),y_offset+(off_y*0.001), z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to next position
+                time.sleep(0.5)
+
+                brailley.translatel_rel([0, 0, -0.01, 0, 0, 0], 0.5, 0.2)  #move down to cell
+                time.sleep(0.5)
+
+                capture_frame("sharp")
+                print("Frame {} captured".format(static_count))
+
+                offset_counter+=1
+
             static_count += 1 #increment counts
 
         scroll_button() #scroll to next row
-        row_count += 1 #increment row count
 
     def scroll_button():
         brailley.movel([0.305801, -0.261322, 0.0186874, 2.21758, 2.22249, -0.00198903], 0.5, 0.2) #move to scroll position
