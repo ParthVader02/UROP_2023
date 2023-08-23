@@ -96,7 +96,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         print("------------Starting data collection------------\r\n")
 
         while dynamic_count < dataset_size: #get at least the target data set size
-            velocity = 0.2
+            velocity = 0.4
             move_robot() #movements
             print("Data point {} of {} collected".format(dynamic_count, dataset_size)) #print progress
 

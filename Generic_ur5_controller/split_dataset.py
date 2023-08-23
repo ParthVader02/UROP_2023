@@ -28,12 +28,7 @@ for image in os.scandir('sharp'):
     output_image = cv2.imread(path)
     input_image = cv2.imread('blurry/im{}.jpg'.format(num)) #read in image
 
-    if input_image is not None:
-        # resize the images for training on existing autoencoder
-        new_size = (128, 128) # new_size=(width, height)
-        input_image = cv2.resize(input_image, new_size)
-        output_image = cv2.resize(output_image, new_size)
-        
+    if input_image is not None: 
         if count <= target_size: #get target data set size
             if count <= train_size: #if image is to be in training set
                 os.makedirs('train', exist_ok=True) 
