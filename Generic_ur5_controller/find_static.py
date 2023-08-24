@@ -11,14 +11,14 @@ static_count = 1 #initialise data_count
 dataset_size = 0 #initialise dataset_size
 row_count = 0 #initialise row_count
 
-z_depth = 0.016#set z depth of sensor 
+z_depth = 0.0155#set z depth of sensor 
 y_offset = -0.271 #set y offset of sensor
 positions = [] #initialise list of positions
 
-for path in os.listdir('blurry'):
-    # check if current path is a file
-    if os.path.isfile(os.path.join('blurry', path)):
-        dataset_size += 1
+# for path in os.listdir('blurry'):
+#     # check if current path is a file
+#     if os.path.isfile(os.path.join('blurry', path)):
+#         dataset_size += 1
 
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
@@ -79,24 +79,24 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
             #row_count += 1 #increment row count
 
     def scroll_button():
-        brailley.movel([0.15, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
+        brailley.movel([0.16, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, -0.006, 0, 0, 0], 0.5, 0.2) #press scroll button
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
         time.sleep(0.5)
-        brailley.movel([0.172,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.172,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+        brailley.movel([0.293484,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
 
     if __name__=='__main__':
         t= Thread(target=read_camera) #start thread to read camera
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
 
-        brailley.movel([0.172, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+        brailley.movel([0.242297, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.172, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+        brailley.movel([0.242297, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
 
         print("------------Starting data collection------------\r\n")
