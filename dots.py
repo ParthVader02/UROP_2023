@@ -4,8 +4,8 @@ from scipy.spatial import KDTree
 
 # gives the image, combined and points only for 7 different images
 
-thresh = 0.012
-mysigma = 0.6
+thresh = 0.02
+mysigma = 0.8
 
 imgs,ptsimg,combinedimg = [], [], []
 for i in range(10):
@@ -28,22 +28,6 @@ for k in range(10):
     # should be removed. there are also 3 extra points ive spotted that it
     # frequently adds which are also removed
     toremove = []
-    for i in range(len(pts)):
-        if pts[i][1] > 150 and pts[i][1] < 160:
-            # any points in the gap between the first row and second row
-            toremove.append(i)
-        elif pts[i][1] > 190 and pts[i][1] < 205:
-            # any points in the gap between the second row and third row
-            toremove.append(i)
-        elif np.sqrt( (pts[i][0]-65) ** 2 + (pts[i][1]-145) ** 2) < 1:
-            toremove.append(i)
-        elif np.sqrt( (pts[i][0]-70) ** 2 + (pts[i][1]-200) ** 2) < 2:
-            toremove.append(i)
-        elif np.sqrt( (pts[i][0]-97) ** 2 + (pts[i][1]-120) ** 2) < 1:
-            toremove.append(i)
-        elif np.sqrt( (pts[i][0]-145) ** 2 + (pts[i][1]-154) ** 2) < 1:
-            toremove.append(i)
-    pts = np.delete(pts,toremove,0)
     print(pts)
 
     for i in pts:
