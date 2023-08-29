@@ -53,7 +53,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         time_list = [] #reset time list
         slide_capture_flag = True
         start_1= time.time()
-        brailley.movel([0.169, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
+        brailley.movel([0.293484, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
         slide_capture_flag = False
         end = time.time()
         print(end-start_1)
@@ -85,9 +85,9 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
         t.daemon = True #set thread to daemon so it closes when main thread closes
         t.start()
         
-        brailley.movel([0.293484, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above first position
+        brailley.movel([0.169, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above first position
         time.sleep(0.5)
-        brailley.movel([0.293484, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+        brailley.movel([0.169, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
         time.sleep(0.5)
 
         with open('test_time_list.csv', 'w') as f:
