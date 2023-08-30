@@ -262,6 +262,8 @@ from threading import Thread
 import re
 import csv
 from roboflow import Roboflow
+import gc
+gc.collect()
 
 sys.path.insert(0, '/home/parth/UROP_2023/Generic_ur5_controller') #add path to brailley controller
 from digit_demo import DigitSensor, DisplayImage
@@ -368,9 +370,6 @@ line_count = int(props[2])
 ##############################################################################################################
 #process images for autoencoder
 
-#os.rmdir('/home/parth/UROP_2023/autoencoder/load_dataset/data/test') #remove any pre-existing test folder
-#os.rmdir('/home/parth/UROP_2023/autoencoder/load_dataset/data/test_outputs') #remove any pre-existing test_outputs folder
-
 for image in os.scandir('/home/parth/UROP_2023/autoencoder/test_blurry'): #for each image in the blurry folder
     path = image.path
     num = (re.findall(r'im(\d+)', path))[0] #get image number
@@ -440,7 +439,7 @@ pred_text = "" #initialise string of predicted text
 os.makedirs('/home/parth/UROP_2023/autoencoder/braille_detect', exist_ok=True) #make folder to store braille classifier images
 for i in range(1, len(test_dataset)+1): #for each image in the predictions folder
     #infer on each image
-    pred_dict = classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=40, overlap=25).json() #save as dictionary data type
+    pred_dict = classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=5, overlap=25).json() #save as dictionary data type
     if 'predictions' in pred_dict:
         preds = pred_dict['predictions'] #get predictions from dictionary
         if len(preds) > 0:
@@ -449,9 +448,11 @@ for i in range(1, len(test_dataset)+1): #for each image in the predictions folde
         else:
             pred_text += " " #add space if no predictions
     #save bounding box image to braille_detect folder
-    classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=40, overlap=25).save("/home/parth/UROP_2023/autoencoder/braille_detect/detect{}.jpg".format(i))
+    classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=5, overlap=25).save("/home/parth/UROP_2023/autoencoder/braille_detect/detect{}.jpg".format(i))
 ##############################################################################################################
 #Compare predicted text with target text
-
-pred_text = "".join(reversed([pred_text[i:i+20] for i in range(0, len(pred_text), 20)])) #reverse predicted text as we are reading from right to left (to reduce effect of rolling shutter)
+pred_list = list(pred_text)
+for i in range(line_count+1):
+    pred_list[40*i:(40*i)+40] = pred_list[40*i:(40*i)+40][::-1] #reverse each line of predicted text, 40 frames per row with 0.2m/s
+pred_text = "".join(pred_list) #convert back to string
 print(pred_text)
