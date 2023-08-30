@@ -70,7 +70,8 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit
                 write.writerow(time_list) #write row to csv
 
     def scroll_button():
-        brailley.movel([0.15, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
+        #brailley.movel([0.15, -0.261243, 0.0200194, 2.09817, 2.33561, -0.00188124], 0.5, 0.2) #move to scroll position
+        brailley.movel([0.305801, -0.261322, 0.0186874, 2.21758, 2.22249, -0.00198903], 0.5, 0.2)
         time.sleep(0.5)
         brailley.translatel_rel([0, 0, -0.006, 0, 0, 0], 0.5, 0.2) #press scroll button
         time.sleep(0.5)
