@@ -1,5 +1,5 @@
 import csv
-with open("testing.txt","r") as temp_file:
+with open("laws.txt","r") as temp_file:
     file = temp_file.read()
 print(file)
 
@@ -14,7 +14,7 @@ print(plaintext)
 splitplain = [plaintext[i:i+20] for i in range(0, len(plaintext), 20)] # split into lines of 20 characters
 for i in range(len(splitplain)): splitplain[i] += "\n" # add new line character to end of each line
 
-plaintext_file = open("new_testing.txt","w") # write to new text file -> this file is put into braille reader SD card
+plaintext_file = open("newlaws.txt","w") # write to new text file -> this file is put into braille reader SD card
 plaintext_file.writelines(splitplain) # write each line
 plaintext_file.close() # close file
 
