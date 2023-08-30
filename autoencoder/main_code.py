@@ -439,16 +439,19 @@ pred_text = "" #initialise string of predicted text
 os.makedirs('/home/parth/UROP_2023/autoencoder/braille_detect', exist_ok=True) #make folder to store braille classifier images
 for i in range(1, len(test_dataset)+1): #for each image in the predictions folder
     #infer on each image
-    pred_dict = classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=5, overlap=25).json() #save as dictionary data type
+    pred_dict = classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=0, overlap=30).json() #save as dictionary data type
     if 'predictions' in pred_dict:
         preds = pred_dict['predictions'] #get predictions from dictionary
+        max_conf = 0 #initialise max confidence
         if len(preds) > 0:
             for pred in preds:
-                    pred_text += pred['class'] #add predicted character to string
+                    if pred['confidence'] > max_conf: #if confidence is higher than previous max confidence
+                        max_class = pred['class'] #save prediction with highest confidence
+            pred_text += max_class #add predicted character with highest confidence to string
         else:
             pred_text += " " #add space if no predictions
     #save bounding box image to braille_detect folder
-    classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=5, overlap=25).save("/home/parth/UROP_2023/autoencoder/braille_detect/detect{}.jpg".format(i))
+    classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=0, overlap=30).save("/home/parth/UROP_2023/autoencoder/braille_detect/detect{}.jpg".format(i))
 ##############################################################################################################
 #Compare predicted text with target text
 pred_list = list(pred_text)
