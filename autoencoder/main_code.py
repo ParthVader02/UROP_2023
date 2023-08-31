@@ -292,99 +292,6 @@ def get_properties():
         f.close()
     return props
 ##############################################################################################################
-#read target text file on braille reader
-def brailley_activate(confusion_flag, velocity):
-    with DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit:
-        frame = digit.get_frame()
-        props = get_properties() #get properties from target text file
-        letter_count = int(props[1]) #get number of letters
-        line_count = int(props[2]) #get number of lines
-
-        total_rows = line_count  #found from target text file
-
-        z_depth = 0.0143 #set z depth of sensor, with medical tape need to be lower for clarity
-        y_offset = -0.27 #set y offset of sensor
-
-        start = 0
-        end = 0
-        dynamic_count = 1
-        time_taken = 0
-        row_counter = 1
-        slide_capture_flag = False #initialise slide capture flag
-
-        velocity = velocity #set velocity of robot
-        print("------------Configuring brailley------------\r\n")
-        brailley = kgr.kg_robot(port=30000,db_host="169.254.252.50")
-        print("----------------Hi brailley!----------------\r\n\r\n")
-
-        def read_camera(): #function to read camera
-            global frame
-            global start
-            while True:
-                frame = digit.get_frame() #get frame from camera
-                if slide_capture_flag == True: 
-                    capture_frame("/home/parth/UROP_2023/autoencoder/test_blurry") #capture frame
-
-        def capture_frame(dir_path): #function to capture frame and save it
-            global static_collect, dynamic_collect, static_count, dynamic_count
-            os.makedirs(dir_path, exist_ok=True)  
-            base_path = os.path.join(dir_path,"im{}.jpg".format(dynamic_count)) #create path to save frame
-            cv2.imwrite(base_path, frame)
-            dynamic_count += 1 #increment counts
-        
-        def move_robot(): #fixed movements for each data collection step
-            global dynamic_count, velocity, row_counter
-            global slide_capture_flag
-            global start, time_taken, end
-            start = time.time() #start timer
-            slide_capture_flag = True
-            brailley.movel([0.296, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
-            slide_capture_flag = False
-            end = time.time()
-            time.sleep(0.1)
-            t = end - start #calculate time taken to slide across row
-            time_taken += t #add time to total time
-
-            row_counter += 1 #increment row counter
-            scroll_button() #press scroll button
-
-        def scroll_button():
-            brailley.movel([0.305801, -0.261322, 0.0186874, 2.21758, 2.22249, -0.00198903], 5, 0.2) #move to scroll position
-            time.sleep(0.1)
-            brailley.translatel_rel([0, 0, -0.006, 0, 0, 0], 0.5, 0.2) #press scroll button
-            time.sleep(0.1)
-            brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
-            time.sleep(0.1)
-            brailley.movel([0.17,y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.6, 0.4) #move above first position
-            time.sleep(0.1)
-            brailley.movel([0.17,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.4) #move to first position
-            time.sleep(0.1)
-
-        t= Thread(target=read_camera) #start thread to read camera
-        t.daemon = True #set thread to daemon so it closes when main thread closes
-        t.start()
-        
-        brailley.movel([0.17, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above first position
-        time.sleep(0.5)
-        brailley.movel([0.17, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
-        time.sleep(0.5)
-
-        print("------------Starting data collection------------\r\n")
-
-        if confusion_flag == True: #if confusion flag is true, only collect 3 rows
-            total_rows = 3
-            letter_count = 60
-        
-        while row_counter <= total_rows: #get at least the target data set size
-            move_robot() #movements
-            print("Row {} of {} collected".format(row_counter, total_rows)) #print progress
-
-        wpm_speed = (letter_count/time_taken)*5/60 #calculate words per minute (using average word length of 5)
-        print("Time taken: {} seconds".format(time_taken)) #print time taken
-        print("Characters: {}".format(letter_count))
-        print("Speed: {} words per minute".format(wpm_speed))
-        print("------------Data collection complete------------\r\n") 
-##############################################################################################################
 #process images for autoencoder
 
 def process_images():
@@ -587,11 +494,6 @@ if __name__ == "__main__":
                 while row_counter <= total_rows: #get at least the target data set size
                     move_robot() #movements
                     print("Row {} of {} collected".format(row_counter, total_rows)) #print progress
-
-                wpm_speed = (letter_count/time_taken)*5/60 #calculate words per minute (using average word length of 5)
-                print("Time taken: {} seconds".format(time_taken)) #print time taken
-                print("Characters: {}".format(letter_count))
-                print("Speed: {} words per minute".format(wpm_speed))
                 print("------------Data collection complete------------\r\n") 
             data_size = deblur()
             print("------------Deblurring complete------------\r\n")
@@ -693,7 +595,7 @@ if __name__ == "__main__":
                 move_robot() #movements
                 print("Row {} of {} collected".format(row_counter, total_rows)) #print progress
 
-            wpm_speed = (letter_count/time_taken)*5/60 #calculate words per minute (using average word length of 5)
+            wpm_speed = (letter_count/time_taken)*60/5 #calculate words per minute (using average word length of 5)
             print("Time taken: {} seconds".format(time_taken)) #print time taken
             print("Characters: {}".format(letter_count))
             print("Speed: {} words per minute".format(wpm_speed))
