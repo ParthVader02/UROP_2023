@@ -587,21 +587,18 @@ if __name__ == "__main__":
 
             print("------------Starting data collection------------\r\n")
 
-            if confusion_flag == True: #if confusion flag is true, only collect 3 rows
-                total_rows = 3
-                letter_count = 60
-            
             while row_counter <= total_rows: #get at least the target data set size
                 move_robot() #movements
                 print("Row {} of {} collected".format(row_counter, total_rows)) #print progress
+                data_size = deblur()
+                print("------------Deblurring complete------------\r\n")
+                pred_text = detect_braille(data_size)
+                print("------------Braille detection complete------------\r\n")
+                print(pred_text)
+                delete_folders() #delete previous folders
 
             wpm_speed = (letter_count/time_taken)*60/5 #calculate words per minute (using average word length of 5)
             print("Time taken: {} seconds".format(time_taken)) #print time taken
             print("Characters: {}".format(letter_count))
             print("Speed: {} words per minute".format(wpm_speed))
             print("------------Data collection complete------------\r\n") 
-        data_size = deblur()
-        print("------------Deblurring complete------------\r\n")
-        pred_text = detect_braille(data_size)
-        print("------------Braille detection complete------------\r\n")
-        print(pred_text)
