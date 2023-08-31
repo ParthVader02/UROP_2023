@@ -8,7 +8,7 @@ for i in file: # loops through every character in the text
     if i.isalpha() or i==" " or i=="\n": # removes any punctuation, numbers
         spacetext += i.lower() # adds the lowercase version of any letters
 plaintext = spacetext.replace(" ","") # removes spaces
-plaintext = plaintext.replace("\n","") # removes new lines
+plaintext = spacetext.replace("\n","") # removes new lines
 print(plaintext)
 
 splitplain = [plaintext[i:i+20] for i in range(0, len(plaintext), 20)] # split into lines of 20 characters
