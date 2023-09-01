@@ -17,6 +17,13 @@ import kg_robot as kgr
 
 capture_flag = False
 image_count = 1
+tape = False
+name = ""
+
+if tape == False:
+    name = "no_tape"
+else:
+    name = "tape"
 
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
@@ -27,15 +34,16 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
     print("----------------Hi brailley!-----------------\r\n\r\n")
 
     def read_camera(): #function to read camera
-        global frame, capture_flag, image_count
+        global frame, capture_flag, image_count, name
         while True:
             frame = digit.get_frame() #get frame from camera
             if capture_flag == True:
-                capture_frame("up_down_images")
+                capture_frame("up_down_images/{}".format(name)) #save frame
                 capture_flag = False
                 image_count += 1 #increment counts
     
     def capture_frame(dir_path): #function to capture frame and save it
+        global frame, image_count
         os.makedirs(dir_path, exist_ok=True)  
         base_path = os.path.join(dir_path,"im{}.jpg".format(image_count)) #create path to save frame
         cv2.imwrite(base_path, frame)
