@@ -29,8 +29,8 @@ for i in range(count):
 
 pixel_coord = (130,120) #pixel coordinates to plot
 
-plt.plot(images[:,pixel_coord[0],pixel_coord[1]]) #plot pixel intensity over time
+#plt.plot(images[:,pixel_coord[0],pixel_coord[1]]) #plot pixel intensity over time
 
 import seaborn as sns; sns.set()
-#ax = sns.heatmap(images.std(axis=0)) #plot standard deviation of images
+ax = sns.heatmap(images.std(axis=0)) #plot standard deviation of images
 plt.show()
