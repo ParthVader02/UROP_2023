@@ -5,7 +5,7 @@ from statistics import mode
 import kg_robot as kgr
 import time
 
-with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
+with (DigitSensor(serialno='D20652', resolution='QVGA', framerate='30') as digit,
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
 
 

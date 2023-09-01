@@ -399,7 +399,7 @@ def update_confusion_matrix(gt_letter, pred_text, confusion_matrix):
 #main code
 
 if __name__ == "__main__":
-    velocity = 0.2 #set velocity of robot
+    velocity = 0.3 #set velocity of robot
 
     confusion_flag = False #set confusion flag to false
     alphabet = alc + " " #alphabet with space
@@ -554,7 +554,7 @@ if __name__ == "__main__":
                 global start, time_taken, end
                 start = time.time() #start timer
                 slide_capture_flag = True
-                brailley.movel([0.296, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
+                brailley.movel([0.2975, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
                 slide_capture_flag = False
                 end = time.time()
                 time.sleep(0.1)
@@ -571,31 +571,40 @@ if __name__ == "__main__":
                 time.sleep(0.1)
                 brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
                 time.sleep(0.1)
-                brailley.movel([0.17,y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.6, 0.4) #move above first position
+                brailley.movel([0.1695,y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.6, 0.4) #move above first position
                 time.sleep(0.1)
-                brailley.movel([0.17,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.4) #move to first position
+                brailley.movel([0.1695,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.4) #move to first position
                 time.sleep(0.1)
 
             t= Thread(target=read_camera) #start thread to read camera
             t.daemon = True #set thread to daemon so it closes when main thread closes
             t.start()
             
-            brailley.movel([0.17, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above first position
+            brailley.movel([0.1695, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above first position
             time.sleep(0.5)
-            brailley.movel([0.17, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+            brailley.movel([0.1695, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
             time.sleep(0.5)
 
             print("------------Starting data collection------------\r\n")
 
+            with open('/home/parth/UROP_2023/predicted_text.txt', 'w') as f: #create text file to save predicted text
+                f.close()
+
             while row_counter <= total_rows: #get at least the target data set size
                 move_robot() #movements
                 print("Row {} of {} collected".format(row_counter, total_rows)) #print progress
-                data_size = deblur()
+                
+                #easier to deblur and detect braille after each row rather than right at the end
+                data_size = deblur() #deblur images 
                 print("------------Deblurring complete------------\r\n")
-                pred_text = detect_braille(data_size)
+                pred_text = detect_braille(data_size) #detect braille
                 print("------------Braille detection complete------------\r\n")
-                print(pred_text)
+                print(pred_text[::-1]) #print predicted text in reverse order as we read from right to left (to reduce effect of rolling shutter)
+                with open('/home/parth/UROP_2023/predicted_text.txt', 'a') as f:
+                    f.write(pred_text[::-1] + "\n") #write predicted text to text file
+                    f.close()
                 delete_folders() #delete previous folders
+                dynamic_count = 1
 
             wpm_speed = (letter_count/time_taken)*60/5 #calculate words per minute (using average word length of 5)
             print("Time taken: {} seconds".format(time_taken)) #print time taken
