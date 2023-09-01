@@ -554,7 +554,7 @@ if __name__ == "__main__":
                 global start, time_taken, end
                 start = time.time() #start timer
                 slide_capture_flag = True
-                brailley.movel([0.2975, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
+                brailley.movel([0.2965, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
                 slide_capture_flag = False
                 end = time.time()
                 time.sleep(0.1)

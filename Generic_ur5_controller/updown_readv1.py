@@ -11,6 +11,7 @@ import math
 from math import pi
 from threading import Thread
 
+
 with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
             DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
 
