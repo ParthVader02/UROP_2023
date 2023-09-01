@@ -399,7 +399,7 @@ def update_confusion_matrix(gt_letter, pred_text, confusion_matrix):
 #main code
 
 if __name__ == "__main__":
-    velocity = 0.3 #set velocity of robot
+    velocity = 0.2 #set velocity of robot
 
     confusion_flag = False #set confusion flag to false
     alphabet = alc + " " #alphabet with space
