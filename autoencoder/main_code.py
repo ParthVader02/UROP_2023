@@ -592,7 +592,7 @@ if __name__ == "__main__":
 
             while row_counter <= total_rows: #get at least the target data set size
                 move_robot() #movements
-                print("Row {} of {} collected".format(row_counter, total_rows)) #print progress
+                print("Row {} of {} collected".format(row_counter-1, total_rows)) #print progress
                 
                 #easier to deblur and detect braille after each row rather than right at the end
                 data_size = deblur() #deblur images 

@@ -135,7 +135,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         #time.sleep(2)
 
         #1hz
-        brailley.movel([0.259405, -0.26263, 0.019, 2.09924, 2.33716, -0.000108163], 0.5, 0.2) #move above tub
+        brailley.movel([0.1695, -0.27, 0.0143+0.01, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above tub
         centrepose=[0.259405, -0.26263, 0.019, 2.09924, 2.33716, -0.000108163]
 
         #5hz

@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="201.37782mm"
-   height="109.07326mm"
-   viewBox="0 0 201.37782 109.07326"
+   width="201.29483mm"
+   height="108.99026mm"
+   viewBox="0 0 201.29483 108.99026"
    version="1.1"
    id="svg1"
    xml:space="preserve"
@@ -27,10 +27,10 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.0620589"
-     inkscape:cx="389.80889"
-     inkscape:cy="276.35002"
-     inkscape:window-width="1920"
-     inkscape:window-height="1043"
+     inkscape:cx="308.8341"
+     inkscape:cy="201.49542"
+     inkscape:window-width="1850"
+     inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -39,7 +39,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-6.7667967,-14.444924)"><g
+     transform="translate(-6.7667967,-14.527924)"><g
        id="g1"
        transform="matrix(0.16259992,0,0,0.16259992,81.738367,63.959255)"
        inkscape:export-filename="ae_diagram.png"
@@ -1444,32 +1444,32 @@
          x="151.55292"
          y="78.416595">ReLU</tspan></text><text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke-width:0.265;stroke-dasharray:none"
        x="179.38698"
        y="87.741814"
        id="text45-28-76"><tspan
          sodipodi:role="line"
          id="tspan45-9-5"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.265;stroke-dasharray:none"
          x="179.38698"
          y="87.741814">ReLU</tspan></text><text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke:#040404;stroke-width:0.265999"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke:#040404;stroke-width:0.1;stroke-dasharray:none"
        x="13.558716"
        y="17.719849"
        id="text46"><tspan
          sodipodi:role="line"
          id="tspan46"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, ';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.266"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, ';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.1;stroke-dasharray:none"
          x="13.558716"
          y="17.719849">Input RGB</tspan></text><text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke:#040404;stroke-width:0.265999"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;stroke:#040404;stroke-width:0.1;stroke-dasharray:none"
        x="183.13461"
        y="35.452347"
        id="text47"><tspan
          sodipodi:role="line"
          id="tspan47"
-         style="stroke-width:0.266"
+         style="stroke-width:0.1;stroke-dasharray:none"
          x="183.13461"
          y="35.452347">Output RGB</tspan></text></g></svg>
