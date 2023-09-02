@@ -9,7 +9,7 @@ with open ('/home/parth/UROP_2023/alphabetnew.txt', 'r') as f: # read in ground 
 gt_text = gt_text.split('\n') # split into lines
 gt_text = gt_text[:-1] # remove last element that is empty
 
-if len(gt_text[-1]) <20: # add spaces to end of last line if less than 20 characters
+if len(gt_text[-1]) <20: # remove spaces at end of last pred line
     rows[-1] = rows[-1][:math.ceil(len(rows[-1])*len(gt_text[-1])/20)]
 
 print(gt_text)
