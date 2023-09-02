@@ -399,7 +399,7 @@ def update_confusion_matrix(gt_letter, pred_text, confusion_matrix):
 #main code
 
 if __name__ == "__main__":
-    velocity = 0.2 #set velocity of robot
+    velocity = 0.3 #set velocity of robot
 
     confusion_flag = False #set confusion flag to false
     alphabet = alc + " " #alphabet with space
@@ -554,7 +554,8 @@ if __name__ == "__main__":
                 global start, time_taken, end
                 start = time.time() #start timer
                 slide_capture_flag = True
-                brailley.movel([0.2965, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
+                brailley.movel([0.2975, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
+                time.sleep(0.02)
                 slide_capture_flag = False
                 end = time.time()
                 time.sleep(0.1)
