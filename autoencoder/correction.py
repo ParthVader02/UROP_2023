@@ -156,7 +156,7 @@ for i in range(len(complete_text)):
         len_score += 1
     elif i == 1 and "".join(plain)[i] in complete_text[:3]:
         len_score += 1
-    elif "".join(plain)[i] in  complete_text[i-2:i+1]:
+    elif "".join(plain)[i] in  complete_text[i-1:i+2]:
         len_score += 1
 len_score /= len(complete_text)
 
