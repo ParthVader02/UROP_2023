@@ -17,7 +17,7 @@ import kg_robot as kgr
 
 capture_flag = False
 image_count = 1
-tape = False
+tape = True
 name = ""
 
 if tape == False:
@@ -93,8 +93,8 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         t.start()
 
         #1hz
-        brailley.movel([0.293, -0.27, 0.0148, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above tub
-        centrepose=[0.293, -0.27, 0.0148, 2.21745, 2.22263, -0.00101733]
+        brailley.movel([0.292, -0.27, 0.0148, 2.21745, 2.22263, -0.00101733], 0.5, 0.2) #move above tub
+        centrepose=[0.292, -0.27, 0.0148, 2.21745, 2.22263, -0.00101733]
 
         #5hz
         #braille_bot.movel([0.259405, -0.26263, 0.019, 2.09924, 2.33716, -0.000108163], 0.5, 0.02) #move above tub
@@ -107,7 +107,7 @@ with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit
         t0 = time.time()
         #initialise scheduler
         #schedule_it(0.05, 10, parameter_move, t0, centrepose,0, 0, 0, 0, 0, 0, 0.05, 2*pi*5, 0, 0, 0, 0)
-        schedule_it(0.05, 3, parameter_move, t0, centrepose,0, 0, 0, 0, 0, 0, 0.005, 2*pi*1, 0, 0, 0, 0)
+        schedule_it(0.05, 5, parameter_move, t0, centrepose,0, 0, 0, 0, 0, 0, 0.005, 2*pi*1, 0, 0, 0, 0)
 
         #run scheduler calling servoj
         scheduler.run()

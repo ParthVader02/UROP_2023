@@ -153,17 +153,22 @@ class DisplayImage():
         # Disconnect Digit sensor
         cv2.destroyAllWindows()
         return
-
+import os
 def example_capture_video():
 
-    with (DigitSensor(serialno='D20652', resolution='QVGA', framerate='60') as digit):
+    with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit):
 
         while True:
             frame = digit.get_frame()
             cv2.imshow('DIGIT Demo', frame)
+            m = 0.5
+            force =  m*9.81
+            dir_path = '/home/parth/UROP_2023/force_images'
             # '27' is the escape key
             if cv2.waitKey(1)==27:
-                cv2.imwrite("reference_frame.jpg", frame)
+                os.makedirs(dir_path, exist_ok=True)  
+                base_path = os.path.join(dir_path,"im{}.jpg".format(force)) #create path to save frame
+                cv2.imwrite(base_path, frame)
                 break
 
 if __name__=='__main__':

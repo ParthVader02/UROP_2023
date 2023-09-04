@@ -26,15 +26,15 @@ for i in range(len(gt_text)): # loop through each line in ground truth and predi
     gt_row = gt_text[i]
     pred_row = rows[i]
     #pred_row = [pred_row[j:j+block_size] for j in range(0, len(pred_row), block_size)] # split into blocks of block_size characters that spaced by blocksize
-    print(pred_row)
+    #print(pred_row)
     if len(pred_row) > 20:
         #print(gt_row, pred_row)
         pred_row = pred_row[:-1] # remove last element if extra element is present
 
     for k in range(0,min(len(pred_row), len(gt_row))):
-        #print(pred_row[k], gt_row[k])
-        print(pred_row[math.floor(k/len(gt_row)*len(pred_row)):math.floor((k)/len(gt_row)*len(pred_row)) + block_size])
-        if gt_row[k] in pred_row[math.floor(k/len(gt_row)*len(pred_row)):math.floor((k)/len(gt_row)*len(pred_row)) + block_size]:
+        print(pred_row[k], gt_row[k])
+        #print(pred_row[math.floor(k/len(gt_row)*len(pred_row)):math.floor((k)/len(gt_row)*len(pred_row)) + block_size])
+        if gt_row[k] in pred_row[math.floor(k/len(gt_row)*len(pred_row)):math.floor((k)/len(gt_row)*len(pred_row)) + block_size]: 
             pos_count += 1
         else:
             neg_count += 1

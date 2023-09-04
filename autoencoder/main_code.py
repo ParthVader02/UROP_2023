@@ -268,9 +268,9 @@ import kg_robot as kgr
 ##############################################################################################################
 #delete previous folders
 
-def delete_folders(): 
-    if os.path.exists('/home/parth/UROP_2023/autoencoder/test_blurry'): 
-        shutil.rmtree('/home/parth/UROP_2023/autoencoder/test_blurry')
+def delete_folders(folder): 
+    if os.path.exists('/home/parth/UROP_2023/autoencoder/{}'.format(folder)):
+        shutil.rmtree('/home/parth/UROP_2023/autoencoder/{}'.format(folder))
     if os.path.exists('/home/parth/UROP_2023/autoencoder/inputs'):
         shutil.rmtree('/home/parth/UROP_2023/autoencoder/inputs')
     if os.path.exists('/home/parth/UROP_2023/autoencoder/predictions'):
@@ -294,8 +294,8 @@ def get_properties():
 ##############################################################################################################
 #process images for autoencoder
 
-def process_images():
-    for image in os.scandir('/home/parth/UROP_2023/autoencoder/test_blurry'): #for each image in the blurry folder
+def process_images(folder):
+    for image in os.scandir('/home/parth/UROP_2023/autoencoder/{}'.format(folder)): #for each image in the blurry folder
         path = image.path
         num = (re.findall(r'im(\d+)', path))[0] #get image number
 
@@ -313,8 +313,8 @@ def process_images():
 ############################################################################################################
 #load blurry images into autoencoder
 
-def deblur():
-    process_images() #process images 
+def deblur(folder):
+    process_images(folder) #process images 
 
     test_dataset = SimData("test") #load test dataset as SimData class
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1000, num_workers=0, shuffle = False) #no shuffle so images go in order
@@ -369,7 +369,7 @@ def detect_braille(data_size):
     os.makedirs('/home/parth/UROP_2023/autoencoder/braille_detect', exist_ok=True) #make folder to store braille classifier images
     for i in range(1, data_size+1): #for each image in the predictions folder
         #infer on each image
-        pred_dict = classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=1, overlap=30).json() #save as dictionary data type
+        pred_dict = classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=0, overlap=30).json() #save as dictionary data type
         if 'predictions' in pred_dict:
             preds = pred_dict['predictions'] #get predictions from dictionary
             max_conf = 0 #initialise max confidence
@@ -382,7 +382,7 @@ def detect_braille(data_size):
             else:
                 pred_text += " " #add space if no classifications
         #save bounding box image to braille_detect folder
-        classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=1, overlap=30).save("/home/parth/UROP_2023/autoencoder/braille_detect/detect{}.jpg".format(i))
+        classifier.predict("/home/parth/UROP_2023/autoencoder/predictions/im{}.jpg".format(i), confidence=0, overlap=30).save("/home/parth/UROP_2023/autoencoder/braille_detect/detect{}.jpg".format(i))
     return pred_text
 ##############################################################################################################
 #Generate confusion matrix
@@ -399,15 +399,16 @@ def update_confusion_matrix(gt_letter, pred_text, confusion_matrix):
 #main code
 
 if __name__ == "__main__":
-    velocity = 0.3 #set velocity of robot
+    velocity = 0.2 #set velocity of robot
 
     confusion_flag = False #set confusion flag to false
+    discrete_flag = False #set discrete flag to false
     alphabet = alc + " " #alphabet with space
     confusion_matrix = pd.DataFrame(np.zeros((27,27)), columns = list(alphabet), index=list(alphabet)) #initialise confusion matrix
 
     if confusion_flag == True:
         for i in alphabet:
-            delete_folders() #delete previous folders
+            delete_folders('test_blurry') #delete previous folders
             print("------------Deleted previous folders------------\r\n")
             print("------------Brailley activated------------\r\n")
             with DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit:
@@ -495,7 +496,7 @@ if __name__ == "__main__":
                     move_robot() #movements
                     print("Row {} of {} collected".format(row_counter, total_rows)) #print progress
                 print("------------Data collection complete------------\r\n") 
-            data_size = deblur()
+            data_size = deblur('test_blurry')
             print("------------Deblurring complete------------\r\n")
             pred_text = detect_braille(data_size)
             print("------------Braille detection complete------------\r\n")
@@ -506,8 +507,8 @@ if __name__ == "__main__":
         print(confusion_matrix)
         confusion_matrix.to_csv("/home/parth/UROP_2023/confusion_matrix.csv")
         print("------------Confusion matrix saved------------\r\n")
-    else:
-        delete_folders() #delete previous folders
+    elif discrete_flag == False:
+        delete_folders('test_blurry') #delete previous folders
         print("------------Deleted previous folders------------\r\n")
         print("------------Brailley activated------------\r\n")
         with DigitSensor(serialno='D20654', resolution='QVGA', framerate='60') as digit:
@@ -520,6 +521,13 @@ if __name__ == "__main__":
 
             z_depth = 0.0143 #set z depth of sensor, with medical tape need to be lower for clarity
             y_offset = -0.27 #set y offset of sensor
+
+            dist = 0.2975-0.1695 #distance between first and last position
+            stop_time = ((dist/velocity*60/20) - 2)/60 #time to stop at end of row to get consistent repetitions
+            if stop_time < 0.016:
+                stop_time = 0.016
+            print("stop time: ", stop_time)
+            print("stop frames: ", stop_time*60+2)
 
             start = 0
             end = 0
@@ -555,7 +563,7 @@ if __name__ == "__main__":
                 start = time.time() #start timer
                 slide_capture_flag = True
                 brailley.movel([0.2975, y_offset, z_depth,  2.21745, 2.22263, -0.00201733], 500, velocity) #slide across one row
-                time.sleep(0.02)
+                time.sleep(stop_time)
                 slide_capture_flag = False
                 end = time.time()
                 time.sleep(0.1)
@@ -596,7 +604,7 @@ if __name__ == "__main__":
                 print("Row {} of {} collected".format(row_counter-1, total_rows)) #print progress
                 
                 #easier to deblur and detect braille after each row rather than right at the end
-                data_size = deblur() #deblur images 
+                data_size = deblur('test_blurry')#deblur images 
                 print("------------Deblurring complete------------\r\n")
                 pred_text = detect_braille(data_size) #detect braille
                 print("------------Braille detection complete------------\r\n")
@@ -604,7 +612,7 @@ if __name__ == "__main__":
                 with open('/home/parth/UROP_2023/predicted_text.txt', 'a') as f:
                     f.write(pred_text[::-1] + "\n") #write predicted text to text file
                     f.close()
-                delete_folders() #delete previous folders
+                delete_folders('test_blurry') #delete previous folders
                 dynamic_count = 1
 
             wpm_speed = (letter_count/time_taken)*60/5 #calculate words per minute (using average word length of 5)
@@ -612,3 +620,109 @@ if __name__ == "__main__":
             print("Characters: {}".format(letter_count))
             print("Speed: {} words per minute".format(wpm_speed))
             print("------------Data collection complete------------\r\n") 
+    elif discrete_flag == True:
+        delete_folders("discrete") #delete previous folders
+        print("------------Deleted previous folders------------\r\n")
+
+        with (DigitSensor(serialno='D20654', resolution='QVGA', framerate='30') as digit,
+                    DisplayImage(window_name='DIGIT Demo') as display): #use wrapper to make accessing DIGIT sensor easier
+            frame = digit.get_frame()
+            props = get_properties() #get properties from target text file
+            letter_count = int(props[1]) #get number of letters
+            line_count = int(props[2]) #get number of lines
+            total_rows = line_count  #found from target text file
+            print(total_rows)
+
+            static_count = 1 #initialise data_count
+            dataset_size = 0 #initialise dataset_size
+            row_counter = 0 #initialise row_count
+
+            time_taken = 0 #initialise time_taken
+            z_depth = 0.0148#set z depth of sensor 
+            y_offset = -0.274 #set y offset of sensor
+
+            print("------------Configuring brailley------------\r\n")
+            brailley = kgr.kg_robot(port=30000,db_host="169.254.252.50")
+            print("----------------Hi brailley!----------------\r\n\r\n")
+
+            def read_camera(): #function to read camera
+                global frame
+                while True:
+                    frame = digit.get_frame() #get frame from camera
+
+            def capture_frame(dir_path): #function to capture frame and save it
+                os.makedirs(dir_path, exist_ok=True) 
+                base_path = os.path.join(dir_path,"im{}.jpg".format(static_count)) #create path to save frame
+                cv2.imwrite(base_path, frame) 
+                
+            def move_robot(): #fixed movements for each data collection step
+                global static_count #use global count variable (need to tell function this or it doesnt work) 
+                global dataset_size, row_counter, time_taken
+                start = time.time() #start timer
+                for i in range(22): #for each cell
+                    if static_count == 1: #if first cell 
+                        capture_frame("/home/parth/UROP_2023/autoencoder/discrete") #capture frame
+                        static_count += 1
+                    else:
+                        brailley.translatel_rel([0, 0, +0.01, 0, 0, 0], 0.5, 0.2) #move up to avoid dragging on surface
+                        time.sleep(0.1)
+                        brailley.translatel_rel([0.006, 0, 0, 0, 0, 0], 0.5, 0.2) #move to next position
+                        time.sleep(0.1)
+                        brailley.translatel_rel([0, 0, -0.01, 0, 0, 0], 0.5, 0.2)  #move down to cell
+                        time.sleep(0.1)
+
+                        capture_frame("/home/parth/UROP_2023/autoencoder/discrete") #capture frame
+                        static_count += 1 #increment counts
+                end = time.time()
+                t = end - start
+                time_taken += t #add time to total time
+                row_counter += 1
+                scroll_button() #press scroll button
+
+            def scroll_button():
+                brailley.movel([0.305801, -0.261322, 0.0186874, 2.21758, 2.22249, -0.00198903], 0.5, 0.2) #move to scroll position
+                time.sleep(0.1)
+                brailley.translatel_rel([0, 0, -0.006, 0, 0, 0], 0.5, 0.2) #press scroll button
+                time.sleep(0.1)
+                brailley.translatel_rel([0, 0, 0.006, 0, 0, 0], 0.5, 0.2) #move back to scroll position
+                time.sleep(0.1)
+                brailley.movel([0.1695,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+                time.sleep(0.1) 
+                brailley.movel([0.1695,y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+
+            t = Thread(target=read_camera) #start thread to read camera
+            t.daemon = True #set thread to daemon so it closes when main thread closes
+            t.start()
+
+            brailley.movel([0.1695, y_offset, z_depth+0.01, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move above first position
+            time.sleep(0.5)
+            brailley.movel([0.1695, y_offset, z_depth, 2.21745, 2.22263, -0.00201733], 0.5, 0.2) #move to first position
+            time.sleep(0.5)
+
+            print("------------Starting data collection------------\r\n")
+            print("------------Dataset size: {}------------\r\n".format(dataset_size))
+            
+            with open('/home/parth/UROP_2023/predicted_text.txt', 'w') as f: #create text file to save predicted text
+                f.close()
+
+            while row_counter <= total_rows: #get at least the target data set size
+                move_robot() #movements
+                print("Row {} of {} collected".format(row_counter-1, total_rows)) #print progress
+                
+                #easier to deblur and detect braille after each row rather than right at the end
+                data_size = deblur("discrete") #deblur images 
+                print("------------Deblurring complete------------\r\n")
+                pred_text = detect_braille(data_size) #detect braille
+                print("------------Braille detection complete------------\r\n")
+                print(pred_text[::-1]) #print predicted text in reverse order as we read from right to left (to reduce effect of rolling shutter)
+                with open('/home/parth/UROP_2023/predicted_text.txt', 'a') as f:
+                    f.write(pred_text[::-1] + "\n") #write predicted text to text file
+                    f.close()
+                delete_folders("discrete") #delete previous folders
+                static_count = 1
+
+            wpm_speed = (letter_count/time_taken)*60/5 #calculate words per minute (using average word length of 5)
+            print("Time taken: {} seconds".format(time_taken)) #print time taken
+            print("Characters: {}".format(letter_count))
+            print("Speed: {} words per minute".format(wpm_speed))
+            print("------------Data collection complete------------\r\n")
