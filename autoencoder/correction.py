@@ -43,9 +43,9 @@ def constrained_partitions(n, k, min_elem, max_elem):
     return list(helper(n, k, ()))
 
 #GET DATA
-with open("predicted_text_0.2.txt","r") as pr:
+with open("predicted_text.txt","r") as pr:
     predicted = pr.readlines()
-with open("lawsnew.txt","r") as pla:
+with open("panagramnew.txt","r") as pla:
     plain = pla.readlines()
 
 for i in range(len(predicted)): predicted[i] = predicted[i].replace("\n","")

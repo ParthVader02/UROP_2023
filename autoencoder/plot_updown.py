@@ -34,14 +34,14 @@ for i in range(count):
     mean_no_tape[i] = np.mean(gray_no_tape[168:210, 60:90])
 
 
-print(mean_tape)
+# print(mean_tape)
 
-plt.plot(mean_tape)
-plt.plot(mean_no_tape)
-plt.xlabel("Image number")
-plt.ylabel("Pixel intensity")
-plt.legend(["Tape", "No tape"])
+# plt.plot(mean_tape)
+# plt.plot(mean_no_tape)
+# plt.xlabel("Image number")
+# plt.ylabel("Pixel intensity")
+# plt.legend(["Tape", "No tape"])
 import seaborn as sns; sns.set()
 #ax = sns.heatmap(images_tape.std(axis=0)) #plot standard deviation of images
-#ax = sns.heatmap(images_no_tape.std(axis=0)) #plot standard deviation of images
+ax = sns.heatmap(images_no_tape.std(axis=0)) #plot standard deviation of images
 plt.show()

@@ -399,10 +399,12 @@ def update_confusion_matrix(gt_letter, pred_text, confusion_matrix):
 #main code
 
 if __name__ == "__main__":
-    velocity = 0.2 #set velocity of robot
+    velocity = 0.1 #set velocity of robot
 
-    confusion_flag = False #set confusion flag to false
-    discrete_flag = False #set discrete flag to false
+    confusion_flag = False #set confusion flag
+    discrete_flag = False #set discrete flag 
+    camera_broken_flag = True #set camera broken flag to True if need to get each row one by one
+
     alphabet = alc + " " #alphabet with space
     confusion_matrix = pd.DataFrame(np.zeros((27,27)), columns = list(alphabet), index=list(alphabet)) #initialise confusion matrix
 
@@ -518,6 +520,8 @@ if __name__ == "__main__":
             line_count = int(props[2]) #get number of lines
 
             total_rows = line_count  #found from target text file
+            if camera_broken_flag == True:
+                total_rows = 1
 
             z_depth = 0.0143 #set z depth of sensor, with medical tape need to be lower for clarity
             y_offset = -0.27 #set y offset of sensor
@@ -596,8 +600,8 @@ if __name__ == "__main__":
 
             print("------------Starting data collection------------\r\n")
 
-            with open('/home/parth/UROP_2023/predicted_text.txt', 'w') as f: #create text file to save predicted text
-                f.close()
+            #with open('/home/parth/UROP_2023/predicted_text.txt', 'w') as f: #create text file to save predicted text
+            #    f.close()
 
             while row_counter <= total_rows: #get at least the target data set size
                 move_robot() #movements
@@ -609,6 +613,7 @@ if __name__ == "__main__":
                 pred_text = detect_braille(data_size) #detect braille
                 print("------------Braille detection complete------------\r\n")
                 print(pred_text[::-1]) #print predicted text in reverse order as we read from right to left (to reduce effect of rolling shutter)
+                input("If no glitch, press enter to continue...") #wait for user to press enter to continue (to check if camera glitch)
                 with open('/home/parth/UROP_2023/predicted_text.txt', 'a') as f:
                     f.write(pred_text[::-1] + "\n") #write predicted text to text file
                     f.close()
@@ -631,7 +636,8 @@ if __name__ == "__main__":
             letter_count = int(props[1]) #get number of letters
             line_count = int(props[2]) #get number of lines
             total_rows = line_count  #found from target text file
-            print(total_rows)
+            if camera_broken_flag == True:
+                total_rows = 1
 
             static_count = 1 #initialise data_count
             dataset_size = 0 #initialise dataset_size
@@ -721,7 +727,7 @@ if __name__ == "__main__":
                 delete_folders("discrete") #delete previous folders
                 static_count = 1
 
-            wpm_speed = (letter_count/time_taken)*60/5 #calculate words per minute (using average word length of 5)
+            wpm_speed = (20*total_rows/time_taken)*60/5 #calculate words per minute (using average word length of 5)
             print("Time taken: {} seconds".format(time_taken)) #print time taken
             print("Characters: {}".format(letter_count))
             print("Speed: {} words per minute".format(wpm_speed))
